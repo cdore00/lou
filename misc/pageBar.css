@@ -1,0 +1,80 @@
+
+/* Pages Bar style*/
+#divPages{
+margin-bottom: 15px;
+max-width: calc(100% - 5px);
+}
+
+.visi{
+visibility:visible;
+}
+.invisi{
+visibility:hidden;
+}
+
+#pageCell{
+width: auto;
+display: inline-block;
+}
+
+#pagn-prev{
+float:left;
+}
+#pagn-next{
+float:right;
+}
+
+ .pagn-prev-next{
+    border: 2px solid #c9dde9 !important;
+	font-weight: bold;
+    padding: 7px 14px;
+	margin-right:10px !important;	
+	margin-left:10px !important;
+    border-radius: 10px;
+	/*visibility:hidden;*/
+	display: inherit;
+	background: #00A4AC;
+ }
+ 
+ .pagn-prev-next:focus, .pagn-prev-next:hover, .pagn-prev-next:visited {
+    color: #c9dde9;
+    text-decoration: none;
+	background: #AD8700;
+/*	display: inherit;*/
+} 
+
+.pages .pg{
+    padding: 7px 14px;
+	margin-right:5px;
+    border: 2px solid #c9dde9;	
+	border-radius: 10px;
+	display: inherit;
+	background: #00A4AC;
+}
+
+.curr{
+    color: #c9dde9 !important;
+	background: #AD8700 !important;
+}
+
+.pg:focus,.pg:hover, .pg:visited {
+    color: #0654ba;
+    text-decoration: none;
+    border-radius: 10px;
+	background: #AD8700;
+	padding: 7px 14px;
+} 
+ 
+
+ 
+#infoPages{
+font-size: 0.6em;
+margin-top: -25px;
+margin-bottom: 15px;
+/*font-weight: bold;*/
+}
+
+#photoParPage{
+	display:inline;
+}
+/* FIN Pages Bar style*/
