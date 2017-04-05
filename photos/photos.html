@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" />
+<meta http-equiv="Content-Language" content="fr"/>
+<meta name="contactcity" content="Quebec"/>
+<meta name="contactprovince" content="Quebec"/>
+<meta name="contactcountry" content="Canada"/>
+<title>Lou popote</title>
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, user-scalable=yes" />
+<link href="misc/favicon.ico" rel="icon" />
+<link href="misc/favicon.ico" rel="shortcut icon" />
+<link rel="stylesheet" type="text/css" href="misc/init.css" media="screen" />
+<link id="pagestyle" rel="stylesheet" type="text/css" href="misc/photo.css" />
+
+<link href="misc/favicon.ico" rel="icon" />
+<link href="misc/favicon.ico" rel="shortcut icon" />
+
+<script type="text/javascript" src="misc/util.js"></script>
+
+<script type="text/javascript"> 
+<!--
+
+var topAjust = null;
+var metsCollection = null;
+var nbrParPage = 3;
+var actPage = 1;
+
+function initP(){
+var collCount;
+
+if (collCount = loadGalery()){
+	var showPhoto = document.getElementById('showPhoto');
+	showPhoto.addEventListener("transitionend", updateTransition, true);
+	if (true){
+		//initGalery(0);
+		initPageBar(collCount);
+	}
+	}else{
+	alert('Lecture des informations non supportée');
+	}
+
+initPage(1);
+document.body.style.cursor='default';
+}
+
+function loadGalery(){
+
+if (XMLHttpRequest){ 
+	if (metsCollection == null){
+		var request = new XMLHttpRequest();
+		document.body.style.cursor='wait';
+		request.open("GET", "mets.xml", false);
+		request.send(null);
+		metsCollection = request.responseXML;
+		return metsCollection.childNodes[0].childElementCount;
+	}
+}else
+	return false;
+}
+
+function initGalery(startColl){
+var photoColl = document.getElementById('photoColl');
+var maxColl = Math.min(startColl + nbrParPage, metsCollection.childNodes[0].childElementCount);
+
+//Supprimer la galerie
+for(var i = 0; i < photoColl.childNodes.length; i++){
+	photoColl.removeChild(photoColl.childNodes[i]);
+}
+//Recréer la galerie
+for(var i = startColl; i < maxColl; i++) {
+	var liElem = document.createElement("li");
+	var plat = metsCollection.childNodes[0].childNodes[i*2+1];
+    var fichier = "photos/" + plat.childNodes[1].childNodes[0].nodeValue;
+    var desc = plat.childNodes[3].childNodes[0].nodeValue;
+
+	//Image
+	var imgElem = document.createElement("img");
+	imgElem.setAttribute("src", fichier);
+	var newlink = document.createElement('a');
+	newlink.setAttribute('class', 'listImg');
+	newlink.setAttribute('href', '#');
+	var callExpanFnc = 'expansion( this, "' + fichier + '","' + desc + '", "" ); return false;';
+	newlink.setAttribute('onclick', callExpanFnc);
+	newlink.appendChild(imgElem);
+	liElem.appendChild(newlink);
+
+	//Description
+	var divElem = document.createElement('div');
+	divElem.setAttribute('class', 'itemDesc');
+	var pElem = document.createElement('p');
+	pElem.innerHTML=desc;
+	divElem.appendChild(pElem);
+	var pElem = document.createElement('p');
+	pElem.innerHTML='<a title="Haut de page" href="#hautPage"><img src="misc/haut.png" alt="Haut de page"/></a>';
+	pElem.setAttribute('class', 'boutHaut');
+	divElem.appendChild(pElem);
+	liElem.appendChild(divElem);
+
+	photoColl.appendChild(liElem);
+	}
+}
+
+//Event function for 360
+var updateTransition = function(e){
+var showPhoto = document.getElementById('showPhoto');
+var objImg = document.getElementById('objImg');
+
+if (objImg.style.maxWidth  == '150px'){
+	//objImg.style.transitionDuration = "0.4s";
+	//showPhoto.style.transition = "width 0.2s, height 0.2s, transform 0.4s;";
+	if (showPhoto.style.transform != "rotate(360deg)")
+		showPhoto.style.transform = "rotate(360deg)";
+	else
+		showPhoto.style.transform = "none";
+	showPhoto.style.visibility="hidden";
+}else{
+	//showPhoto.style.transform = "none";
+}
+showPhoto.removeEventListener("transitionend", updateTransition);
+//alert(objImg.style.maxWidth);
+}
+
+function hideShow(){
+var showPhoto = document.getElementById('showPhoto');
+var objImg = document.getElementById('objImg');
+var imgDesc = document.getElementById('imgDesc');
+
+	imgDesc.innerHTML = '';
+	objImg.style.maxWidth  = '150px';
+	//showPhoto.style.transform = "rotate(360deg)";
+	//showPhoto.style.transitionDelay = "0.4s";
+	//showPhoto.style.visibility="hidden";
+	//objImg.src = "";
+		showPhoto.style.transform = "none";
+}
+
+function expansion(obj, photoName, desc, dimension){
+var showPhoto = document.getElementById('showPhoto');
+var objImg = document.getElementById('objImg');
+var imgDesc = document.getElementById('imgDesc');
+var objImgMaxWidth;
+
+//showPhoto.removeEventListener("transitionend", updateTransition);
+if("matchMedia" in window) { // Détection
+    if(window.matchMedia("(max-width: 540px)").matches) {
+      objImgMaxWidth = (getWindowWidth() - 30) + 'px';
+    } else {
+      objImgMaxWidth = parseInt((.7 * window.screen.width)) + 'px';
+    }
+}else {
+    objImgMaxWidth = parseInt((.7 * window.screen.width)) + 'px';
+}
+
+if (topAjust == null){
+	topAjust = 20;
+	if (navigator.userAgent.toLowerCase().indexOf('firefox') != -1)
+		topAjust = 0;
+		
+	//alert(navigator.userAgent);	
+}
+
+showPhoto.style.transform = "none";
+//showPhoto.style.transition = "width 0.2s, height 0.2s, transform 0.4s;";
+//showPhoto.style.transform = "rotate(0deg)";
+	objImg.style.transitionDuration = "0.4s";
+	objImg.src = "misc/spin.gif";
+	//obj.scrollIntoView (true);
+	showPhoto.style.top = ((GetCoordY(obj)) + 0) + 'px';
+	//showPhoto.style.top = getOffset( obj ).top - (obj.offsetHeight / 2) + 'px';
+	showPhoto.style.left = ((GetCoordX(obj)) + 0) + 'px';
+	showPhoto.style.visibility="visible";
+	objImg.style.maxWidth  = objImgMaxWidth;		
+	objImg.src=photoName;
+	imgDesc.innerHTML =  desc;
+	//objImg.style.transitionDelay = "0s";
+}
+
+
+function changePage(pageNo){
+var pageCell = document.getElementById('pageCell');
+
+if (pageNo == 0)
+	if (actPage == 1)
+		return;
+	else
+		pageNo = actPage - 1;
+		
+if (pageNo == 99)
+	if (actPage == pageCell.children.length)
+		return;
+	else
+		pageNo = actPage + 1;
+	
+for(var i = 0; i < pageCell.children.length; i++){
+	pageCell.childNodes[i+3].className="pg";
+	pageCell.childNodes[i+3].href="javascript:changePage(" + (i +1) + ");";
+}
+pageCell.childNodes[(pageNo-1)+3].className="pg  curr";
+pageCell.childNodes[(pageNo-1)+3].href="javascript:;";
+
+actPage = pageNo;
+//initGalery(0);
+initGalery(Math.max(0, (actPage - 1) * nbrParPage - 1 ));
+}
+
+function initPageBar(collCnt){
+var objCnt;
+	var pageCell = document.getElementById("pageCell");
+
+	
+objCnt = parseInt(collCnt / nbrParPage);
+if (objCnt < (collCnt / nbrParPage))
+	objCnt ++;
+
+if (collCnt > 1 && objCnt > 1 ){
+for(var i = 0; i < objCnt; i++){
+
+	var newlink = document.createElement('a');  //Créer les liens pages
+	newlink.setAttribute('class', 'pg');
+	newlink.setAttribute('href', 'javascript:changePage(' + (i + 1) + ');');
+	newlink.innerHTML = i + 1;
+	pageCell.appendChild(newlink);
+	}
+	//alert(objCnt);
+}else{
+	var Pagination = document.getElementById("Pagination");
+	Pagination.parentNode.removeChild(Pagination);
+}
+changePage(1);
+
+}
+
+// -->
+</script> 
+</head>
+
+<body onload="initP();">
+
+<div id="entete">
+<a name="hautPage"></a>
+<h1>Lou popote</h1>
+<button type="button" id="rightnav" title="Taille de police" onclick="changeTaille();"><img id="imgTaille" alt="Taille de police" height="20" width="45" src="misc/taille.png" /></button>
+</div>
+
+<div id="divmenu">
+<ul>
+	<li>
+	<a href="index.html">Accueil</a>
+	</li>
+	<li>
+	<a id="ancPhoto" href="menu.html">Menu</a>  
+	</li>
+	<li>
+	<a class="selOpt" >Photos</a>
+	</li>
+	<li>
+	<a href="joindre.html">Nous joindre</a>
+	</li>
+</ul>
+</div>
+
+<div id="content">
+<h2>Photos</h2>
+
+<div>
+<table id="Pagination" class="pagn pagn-m">
+		<tbody><tr>
+			<td><a class="pagn-prev-next" href="javascript:changePage(0);"><</a></td>
+			<td id="pageCell" class="pages">
+				<!--<a class="pg  curr" href="javascript:changePage(1);">1</a>
+				<a class="pg" href="javascript:changePage(2);">2</a>
+				<a class="pg" href="javascript:changePage(3);">3</a> // -->
+			</td>
+			<td class="pagn-next"><a class="pagn-prev-next" href="javascript:changePage(99);">></a></td>
+		</tr>
+	</tbody></table>
+</div>
+
+<div class="listItem-gallery">
+
+<ul id="photoColl">
+	<li>
+	</li>
+</ul>
+
+</div>
+
+</div>  <!--End content // -->
+
+<div id="piedPage">
+<div id="W3C-XHTML">
+<p>
+    <a onclick="window.open('http://validator.w3.org/check?uri=http://cdore.no-ip.biz/lou/photos.html','new','');return false" href="http://validator.w3.org/check?uri=http://cdore.no-ip.biz/lou/photos.html"><img
+      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+</p>
+</div>
+<div>
+<p id="copyright"><a href="mailto: lou@loupopote.com?Subject=Site Lou popote.com">Tous droits r&eacute;serv&eacute;s: Lou popote 2016</a></p>
+</div>
+</div>
+
+<div id="showPhoto"  title="Cliquer pour fermer" onclick="hideShow()">
+<div id="imgArea">
+<table class="noborder">
+<tr><td><img id="objImg"  src="misc/spin.gif" title="Cliquer pour fermer" alt=""/></td></tr><tr><td><div id="imgDesc"></div></td></tr>
+</table></div></div>
+
+ </body>	 
+ </html>
