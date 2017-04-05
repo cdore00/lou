@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<plat1>
+		<file>pizza.jpg</file>
+		<desc>Pizza: Choix de 3 viandes, poulet et pesto ou chèvre et pignon de pin</desc>
+		<prix>7</prix>
+		<puplie>O</puplie>
+	</plat1>
+	<plat2>
+		<file>couscous.jpg</file>
+		<desc>Couscous aux saucisses italiennes</desc>
+		<prix>10</prix>
+		<puplie>O</puplie>
+	</plat2>
+	<plat3>
+		<file>Croquettes.jpg</file>
+		<desc>Croquettes millet et lentilles avec poêlée de légumes</desc>
+		<prix>10</prix>
+		<puplie>O</puplie>
+	</plat3>
+	<plat4>
+		<file>tartelettes.jpg</file>
+		<desc>Tartelettes au sucre surmontées d'une ganache au chocolat</desc>
+		<prix>7</prix>
+		<puplie>O</puplie>
+	</plat4>
+	<plat5>
+		<file>boeuf.jpg</file>
+		<desc>Boeuf à l'orange</desc>
+		<prix>10</prix>
+		<puplie>O</puplie>
+	</plat5>
+	<plat6>
+		<file>filet_morue.jpg</file>
+		<desc>Filet de morue sauce tartare et patates au four</desc>
+		<prix>10</prix>
+		<puplie>O</puplie>
+	</plat6>
+	<plat7>
+		<file>Boulettes suedoises.jpg</file>
+		<desc>Boulettes suédoises, purée de pomme de terre et confitures de canneberges</desc>
+		<prix>10</prix>
+		<puplie>O</puplie>
+	</plat7>
+	<plat8>
+		<file>Jambon erable.jpg</file>
+		<desc>Jambon érable et ananas avec purée de légumes</desc>
+		<prix>10</prix>
+		<puplie>O</puplie>
+	</plat8>
+	<plat9>
+		<file>Creme_champignon.jpg</file>
+		<desc>Crème de champignon</desc>
+		<prix>5</prix>
+		<puplie>O</puplie>
+	</plat9>
+	<plat10>
+		<file>general_tao.jpg</file>
+		<desc>Général tao</desc>
+		<prix>5</prix>
+		<puplie>O</puplie>
+	</plat10>
+	<plat11>
+		<file>boeuf_biere.jpg</file>
+		<desc>Mijoté de boeuf à la bière</desc>
+		<prix>10</prix>
+		<puplie>O</puplie>
+	</plat11>
+	<plat12>
+		<file>pate_chinois.jpg</file>
+		<desc>Pâté chinois</desc>
+		<prix>8</prix>
+		<puplie>O</puplie>
+	</plat12>
+	<plat13>
+		<file>crepe_homard.jpg</file>
+		<desc>Crêpes au homard</desc>
+		<prix>12</prix>
+		<puplie>O</puplie>
+	</plat13>
+	<plat14>
+		<file>padthaï_porc.jpg</file>
+		<desc>Pad thaï au porc</desc>
+		<prix>10</prix>
+		<puplie>O</puplie>
+	</plat14>
+	<plat15>
+		<file>filet_porc_biere.jpg</file>
+		<desc>Filet de porc bière et mélasse avec gratin dauphinois</desc>
+		<prix>12</prix>
+		<puplie>O</puplie>
+	</plat15>	
+	<plat16>
+		<file>assiette_chinoise.jpg</file>
+		<desc>Assiette chinoise</desc>
+		<prix>12</prix>
+		<puplie>O</puplie>
+	</plat16>
+	<plat17>
+		<file>nouilles_porc_brocoli.jpg</file>
+		<desc>Nouilles au porc, brocoli et noix de cajou, sauce au gingembre</desc>
+		<prix>8</prix>
+		<puplie>O</puplie>
+	</plat17>	
+	<plat18>
+		<file>lasagne.jpg</file>
+		<desc>Lasagne</desc>
+		<prix>8</prix>
+		<puplie>O</puplie>
+	</plat18>		
+</mets>

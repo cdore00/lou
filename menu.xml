@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<menu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<livraisons>
+		<livLundi>Livraison du lundi20 mars :</livLundi>
+		<livMardi/>
+		<livMercredi>Livraison du mercredi 22 mars :</livMercredi>
+		<livJeudi/>
+		<livVendredi/>
+		<livSamedi/>
+		<livDimanche/>
+	</livraisons>
+	<menu1>
+		<mets1>
+			<mets/>
+			<desc>Filet de porc bière et mélasse avec gratin dauphinois </desc>
+			<prix>12</prix>
+			<lien/>
+		</mets1>
+		<mets2>
+			<mets/>
+			<desc>Pain aux lentilles et salade verte (végé)</desc>
+			<prix>8 </prix>
+			<lien/>
+		</mets2>
+		<mets3>
+			<mets/>
+			<desc>Fameux général tao sur riz basmati </desc>
+			<prix>10</prix>
+			<lien/>
+		</mets3>
+		<mets4>
+			<mets/>
+			<desc/>
+			<prix/>
+			<lien/>
+		</mets4>
+		<mets5>
+			<mets/>
+			<desc/>
+			<prix/>
+			<lien/>
+		</mets5>
+	</menu1>
+	<menu2>
+		<mets1>
+			<mets/>
+			<desc>Gratin de saucisses, patates douces et oignons rouges </desc>
+			<prix>10</prix>
+			<lien/>
+		</mets1>
+		<mets2>
+			<mets/>
+			<desc>Pad thai aux crevettes </desc>
+			<prix>12</prix>
+			<lien/>
+		</mets2>
+		<mets3>
+			<mets/>
+			<desc>Orzo au chorizo et feta </desc>
+			<prix>8</prix>
+			<lien/>
+		</mets3>
+		<mets4>
+			<mets/>
+			<desc/>
+			<prix/>
+			<lien/>
+		</mets4>
+		<mets5>
+			<mets/>
+			<desc/>
+			<prix/>
+			<lien/>
+		</mets5>
+	</menu2>
+	<menuX>
+		<mets1>
+			<mets/>
+			<desc>Soupe boeuf et orge</desc>
+			<prix>6</prix>
+			<lien/>
+		</mets1>
+		<mets2>
+			<mets>plat12</mets>
+			<desc/>
+			<prix/>
+			<lien/>
+		</mets2>
+		<mets3>
+			<mets/>
+			<desc>Spaghetti sauce maison à la viande </desc>
+			<prix>8</prix>
+			<lien/>
+		</mets3>
+		<mets4>
+			<mets/>
+			<desc/>
+			<prix/>
+			<lien/>
+		</mets4>
+		<mets5>
+			<mets/>
+			<desc/>
+			<prix/>
+			<lien/>
+		</mets5>
+	</menuX>
+</menu>

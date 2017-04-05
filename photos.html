@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" />
+<meta http-equiv="Content-Language" content="fr"/>
+<meta name="contactcity" content="Quebec"/>
+<meta name="contactprovince" content="Quebec"/>
+<meta name="contactcountry" content="Canada"/>
+<title>Lou popote</title>
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, user-scalable=yes" />
+<link href="misc/favicon.ico" rel="icon" />
+<link href="misc/favicon.ico" rel="shortcut icon" />
+
+<link rel="stylesheet" type="text/css" href="misc/init.css" media="screen" />
+<link id="pagestyle" rel="stylesheet" type="text/css" href="misc/photo.css" />
+<link id="pagestyle" rel="stylesheet" type="text/css" href="misc/pageBar.css">
+
+<script type="text/javascript" src="misc/util.js"></script>
+
+<script type="text/javascript"> 
+<!--
+
+var rep = "";
+
+var topAjust = null;
+var metsCollection = null;
+var nbrParPage = 5;
+var actPage = 1;
+var collCount;
+
+function initP(){
+
+if (collCount = loadGalery()){
+	var showPhoto = document.getElementById('showPhoto');
+	showPhoto.addEventListener("transitionend", updateTransition, true);
+	}else{
+	alert('Lecture des informations XML non supportée');
+	}
+
+initPageBar(collCount);
+initPage(1);
+document.body.style.cursor='default';
+}
+
+function loadGalery(){
+
+if (XMLHttpRequest){ 
+	if (metsCollection == null){
+		var request = new XMLHttpRequest();
+		document.body.style.cursor='wait';
+       try{
+			request.open("GET", "mets.xml?_=" + new Date().getTime(), false);
+            request.send(null);//here a xmlhttprequestexception number 101 is thrown 
+        }catch(err){
+            alert(err.message);
+			return false;
+        //this prints "XMLHttprequest error: undefined" in the body.
+        }		
+		//request.send(null);
+		metsCollection = request.responseXML;
+		return metsCollection.childNodes[0].childElementCount;
+	}
+}else
+	return false;
+}
+
+function initGalery(startColl){
+var photoColl = document.getElementById('photoColl');
+var maxColl = Math.min((startColl + parseInt(nbrParPage)), metsCollection.childNodes[0].childElementCount);
+
+//Supprimer la galerie
+for(var i = 0; i < photoColl.childNodes.length; i++){
+	photoColl.removeChild(photoColl.childNodes[0]);
+}
+//Recréer la galerie
+var ulElem = document.createElement("ul");
+for(var i = startColl; i < maxColl; i++) {
+	var liElem = document.createElement("li");
+	var plat = metsCollection.childNodes[0].childNodes[i*2+1];
+    var fichier = rep + "photos/" + plat.childNodes[1].childNodes[0].nodeValue;
+    var desc = plat.childNodes[3].childNodes[0].nodeValue;
+
+	//Image
+	var imgElem = document.createElement("img");
+	imgElem.setAttribute("src", fichier);
+	var newlink = document.createElement('a');
+	newlink.setAttribute('class', 'listImg');
+	newlink.setAttribute('href', '#');
+	var callExpanFnc = 'expansion( this, "' + fichier + '","' + desc + '", "" ); return false;';
+	newlink.setAttribute('onclick', callExpanFnc);
+	newlink.appendChild(imgElem);
+	liElem.appendChild(newlink);
+
+	//Description
+	var divElem = document.createElement('div');
+	divElem.setAttribute('class', 'itemDesc');
+	var pElem = document.createElement('span');
+	pElem.innerHTML=desc;
+	divElem.appendChild(pElem);
+	var pElem = document.createElement('p');
+	pElem.innerHTML='<a title="Haut de page" href="#hautPage"><img src="misc/haut.png" alt="Haut de page"/></a>';
+	pElem.setAttribute('class', 'boutHaut');
+	divElem.appendChild(pElem);
+	liElem.appendChild(divElem);
+	//Ajouter l'élément <li> à l'élément <ul>
+	ulElem.appendChild(liElem);
+	}
+// Initialiser la valeur nombre par page.
+var photo_de_a = document.getElementById('photo_de_a');
+var nbrPageSelect = document.getElementById('nbrPageSelect');
+for(var i = 0; i < nbrPageSelect.length; i++) {
+	if (nbrPageSelect.options[i].value == nbrParPage)
+		nbrPageSelect.selectedIndex = i;
+}
+photo_de_a.innerHTML = "Photos " + (startColl + 1) + " à " + maxColl + " parmi " + metsCollection.childNodes[0].childElementCount;
+// Afficher la sélection <ul>
+photoColl.appendChild(ulElem);
+
+}
+
+//Event function for 360
+var updateTransition = function(e){
+var showPhoto = document.getElementById('showPhoto');
+var objImg = document.getElementById('objImg');
+
+if (objImg.style.maxWidth  == '150px'){
+	if (showPhoto.style.transform != "rotate(360deg)")
+		showPhoto.style.transform = "rotate(360deg)";
+	else
+		showPhoto.style.transform = "none";
+	showPhoto.style.visibility="hidden";
+}else{
+	//showPhoto.style.transform = "none";
+}
+
+}
+
+function hideShow(){
+var showPhoto = document.getElementById('showPhoto');
+var objImg = document.getElementById('objImg');
+var imgDesc = document.getElementById('imgDesc');
+
+	imgDesc.innerHTML = '';
+	objImg.style.maxWidth  = '150px';
+	showPhoto.style.transform = "none";
+}
+
+function expansion(obj, photoName, desc, dimension){
+var showPhoto = document.getElementById('showPhoto');
+var objImg = document.getElementById('objImg');
+var imgDesc = document.getElementById('imgDesc');
+var objImgMaxWidth;
+
+if("matchMedia" in window) { // Détection
+    if(window.matchMedia("(max-width: 540px)").matches) {
+      objImgMaxWidth = (getWindowWidth() - 30) + 'px';
+    } else {
+      objImgMaxWidth = parseInt((.65 * getWindowWidth())) + 'px';
+    }
+}else {
+    objImgMaxWidth = parseInt((.65 * getWindowWidth())) + 'px';
+}
+
+showPhoto.style.transform = "none";
+objImg.style.transform = "none";
+showPhoto.style.transitionProperty = "";
+	objImg.src = "misc/spin.gif";
+	showPhoto.style.top = ((GetCoordY(obj)) + 0) + 'px';
+	//showPhoto.style.top = getOffset( obj ).top - (obj.offsetHeight / 2) + 'px';
+	showPhoto.style.left = ((GetCoordX(obj)) + 0) + 'px';
+	//objImg.style.transitionDuration = "0.4s";
+
+	objImg.style.maxWidth  = objImgMaxWidth;	
+	showPhoto.style.maxWidth  = objImgMaxWidth;	
+	objImg.src=photoName;
+	imgDesc.innerHTML =  desc;
+		showPhoto.style.visibility="visible";
+	//objImg.style.transitionDelay = "0s";
+}
+
+function changePage(pageNo){
+var pageCell = document.getElementById('pageCell');
+
+if (pageNo == 0)
+	if (actPage == 1){
+		actPage = pageCell.children.length;
+		pageNo = actPage;}
+	else
+		pageNo = actPage - 1;
+		
+if (pageNo == 99)
+	if (actPage == pageCell.children.length){
+		actPage = 1;
+		pageNo = actPage;}
+	else
+		pageNo = actPage + 1;
+	
+for(var i = 0; i < pageCell.children.length; i++){
+	pageCell.childNodes[i+3].className="pg";
+	pageCell.childNodes[i+3].href="javascript:changePage(" + (i +1) + ");";
+}
+pageCell.childNodes[(pageNo-1)+3].className="pg curr";
+pageCell.childNodes[(pageNo-1)+3].href="javascript:;";
+
+actPage = pageNo;
+//initGalery(0);
+initGalery(Math.max(0, (actPage - 1) * nbrParPage ));
+}
+
+function initPageBar(collCnt){
+var Pagination = document.getElementById("divPages");
+var pageCell = document.getElementById("pageCell");
+var objCnt;
+
+//pageCell.innerHTML = "";
+var aFin = pageCell.childNodes.length
+for(var i = 3; i < aFin; i++){
+	pageCell.removeChild(pageCell.childNodes[3]);
+}
+
+objCnt = parseInt(collCnt / nbrParPage);
+if (objCnt < (collCnt / nbrParPage))
+	objCnt ++;
+
+if (collCnt > 1 && objCnt > 1 ){
+for(var i = 0; i < objCnt; i++){
+
+	var newlink = document.createElement('a');  //Créer les liens pages
+	newlink.setAttribute('class', 'pg');
+	newlink.setAttribute('href', 'javascript:changePage(' + (i + 1) + ');');
+	newlink.innerHTML = i + 1;
+	pageCell.appendChild(newlink);
+	}
+	changePage(1);
+	Pagination.className="visi";
+	Pagination.style.maxWidth = (getWindowWidth() - 10) + 'px';
+	//alert(Pagination.style.maxWidth);
+}else{
+	Pagination.className="invisi";
+}
+if (collCnt > 0 && objCnt == 1 )
+initGalery(0);
+
+}
+
+function changePhotoPage(nbrPage){
+//alert(nbrPage.options[nbrPage.selectedIndex].value);
+nbrParPage = nbrPage.options[nbrPage.selectedIndex].value;
+initPageBar(collCount);
+}
+// -->
+</script> 
+</head>
+
+<body onload="initP();" style="cursor: wait;">
+
+<div id="entete">
+<a name="hautPage"></a>
+<h1>Lou popote</h1>
+<button type="button" id="rightnav" title="Taille de police" onclick="changeTaille();"><img id="imgTaille" alt="Taille de police" height="20" width="45" src="misc/taille.png"></button>
+</div>
+
+<div id="divmenu">
+<ul>
+	<li>
+	<a href="index.html">Accueil</a>
+	</li>
+	<li>
+	<a id="ancPhoto" href="menu.html">Menu</a>  
+	</li>
+	<li>
+	<a class="selOpt">Photos</a>
+	</li>
+	<li>
+	<a href="joindre.html">Nous joindre</a>
+	</li>
+</ul>
+</div>
+
+<div id="content">
+<h2>Photos</h2>
+
+<div id="infoPages"><span id="photo_de_a"></span>
+<span>
+&nbsp;-&nbsp;
+<form id="photoParPage">
+<SELECT id="nbrPageSelect" onChange="changePhotoPage(this)";>
+	<OPTION value="1">1</OPTION>
+	<OPTION value="2">2</OPTION>
+	<OPTION value="3">3</OPTION>
+	<OPTION value="4">4</OPTION>
+	<OPTION value="5">5</OPTION>
+	<OPTION value="10">10</OPTION>
+	<OPTION value="20">20</OPTION>
+</select>
+</form>
+&nbsp;photos par page
+</span></div>
+
+<div id="divPages">
+	<div id="pagn-prev"><a class="pagn-prev-next" href="javascript:changePage(0);">&lt;</a></div>
+	<div id="pageCell" class="pages">
+		<!--End content <a class="pg  curr" href="javascript:changePage(1);">1</a>
+		<a class="pg" href="javascript:changePage(2);">2</a>
+		<a class="pg" href="javascript:changePage(3);">3</a>// -->
+	</div>
+	<div id="pagn-next"><a class="pagn-prev-next" href="javascript:changePage(99);">&gt;</a></div>
+</div>
+
+<div  id="photoColl" class="listItem-gallery slidein">
+
+</div>
+
+</div>  <!--End content // -->
+
+<div id="piedPage">
+<div id="W3C-XHTML">
+<p>
+    <a onclick="window.open(&#39;http://validator.w3.org/check?uri=http://cdore.no-ip.biz/lou/photos2.html&#39;,&#39;new&#39;,&#39;&#39;);return false" href="http://validator.w3.org/check?uri=http://cdore.no-ip.biz/lou/photos2.html"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88"></a>
+</p>
+</div>
+<div>
+<p id="copyright"><a href="mailto: lou@loupopote.com?Subject=Site%20Lou%20popote.com">Tous droits réservés: Lou popote 2016</a></p>
+</div>
+</div>
+
+<div id="showPhoto" title="Cliquer pour fermer" onclick="hideShow()">
+<div id="imgArea">
+<table class="noborder">
+<tbody><tr><td><img id="objImg" src="misc/spin.gif" title="Cliquer pour fermer" alt=""></td></tr><tr><td><div id="imgDesc"></div></td></tr>
+</tbody></table></div></div>
+
+ 	 
+ 
+</body></html>
