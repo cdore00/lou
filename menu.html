@@ -31,8 +31,8 @@ var commandeEnvoye = false;
 var updtInfo = null;
 var nodejsHost = "http://gserver-googleserv.44fs.preview.openshiftapps.com/";
 //"http://gserver-googleserv.44fs.preview.openshiftapps.com/";
-//"http://192.168.2.10:3000/lou/";
-//"http://cdore.no-ip.biz:3000/lou/";
+//"http://192.168.2.10:3000/nod/";
+//"http://cdore.no-ip.biz:3000/nod/";
 
 function loadMetsXML(){
 var divProgress = document.getElementById("divProgress");
@@ -417,7 +417,8 @@ if (progressBar.value >= 1){
 function submitForm(deleteCommand){
 var cartliv1 = document.getElementById('cartliv1');
 var cartliv3 = document.getElementById('cartliv3');
-var frameInfo = document.getElementById('frameInfo');
+//var frameInfo = document.getElementById('frameInfo');
+var divframeInfo = document.getElementById('divframeInfo');
 var cart = cartContent.listeChoix;
 var mailInfoJ1 = "&L1=" + cartliv1.innerHTML;
 var mailInfoJ3 = "&L3=" + cartliv3.innerHTML;
@@ -426,7 +427,7 @@ var rangeInfo = "";
 
 if (checkInfo()){
 	var divProgress = document.getElementById("divProgress");
-	frameInfo.style.display = "inherit";
+	//frameInfo.style.display = "inherit";
 	closeCart(true);
 	progressBar.max = 1;
 	progressBar.value = .05;
@@ -454,11 +455,36 @@ if (checkInfo()){
 	if (updtInfo)
 		rangeInfo = "&range=" + updtInfo;
 	strCom = nodejsHost + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3;
-	frameInfo.src = strCom;
+	//oldSub(strCom);
+var ifElem = document.createElement("iframe");
+ifElem.setAttribute('id', 'frameInfo');	
+ifElem.setAttribute('src', strCom);
+ifElem.setAttribute('onload','loadedIframe(this);');
+divframeInfo.appendChild(ifElem);
+ifElem.style.display = "inherit";
+	//frameInfo.src = strCom;
 	return true;
 }else{
 	return false;
 }
+}
+
+function oldSub(strCom){
+
+xhr = getXMLHttpRequest();
+
+  xhr.onloadend = function() {
+    var text = xhr.responseText;
+//	var subComm = document.getElementById('subComm');
+//	subComm.innerHTML = 'Commande envoy&eacute;e' + text;
+//	subComm.style.webkitAnimationPlayState = "running";
+    alert('Response from CORS request to : ' + text);
+  };
+	xhr.open("GET", strCom, true);
+	//xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin, X-Requested-With, Content-Type, Accept');
+	//xhr.setRequestHeader("Access-Control-Allow-Origin:", "*");
+	xhr.send(null);	
 }
 
 function loadedIframe(objIframe){
@@ -493,11 +519,11 @@ if (typeof HTMLDialogElement !== 'function') {
 		dialogBox.style.visibility="hidden";
 	} 
 
-var ifElem = document.createElement("iframe");
-ifElem.setAttribute('id', 'frameInfo');	
-ifElem.setAttribute('src', 'vide.html');
-ifElem.setAttribute('onload','loadedIframe(this);');
-divframeInfo.appendChild(ifElem);
+//var ifElem = document.createElement("iframe");
+//ifElem.setAttribute('id', 'frameInfo');	
+//ifElem.setAttribute('src', 'vide.html');
+//ifElem.setAttribute('onload','loadedIframe(this);');
+//divframeInfo.appendChild(ifElem);
 
 initPage();
 menuList.addEventListener("animationend", updateAnimation, true);
