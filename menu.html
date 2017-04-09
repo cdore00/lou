@@ -480,11 +480,13 @@ xhr = getXMLHttpRequest();
 //	subComm.style.webkitAnimationPlayState = "running";
     alert('Response from CORS request to : ' + text);
   };
-	xhr.open("GET", strCom);
-	//xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.open("GET", strCom, true);
+	//xhr.setRequestHeader("Content-Type", "text/plain");
 	//xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin, X-Requested-With, Content-Type, Accept');
-	//xhr.setRequestHeader("Access-Control-Allow-Origin:", "*");
-	xhr.send();	
+	xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
+	//xhr.setRequestHeader("Content-Type", "text/plain");
+	xhr.setRequestHeader("Origin", "https://rawgit.com");
+	xhr.send(null);	
 }
 
 function loadedIframe(objIframe){
