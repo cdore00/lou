@@ -455,10 +455,10 @@ if (checkInfo()){
 	if (updtInfo)
 		rangeInfo = "&range=" + updtInfo;
 	strCom = nodejsHost + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3;
-	//oldSub(strCom);
+	oldSub(strCom);
 var ifElem = document.createElement("iframe");
 ifElem.setAttribute('id', 'frameInfo');	
-ifElem.setAttribute('src', strCom);
+//ifElem.setAttribute('src', strCom);
 ifElem.setAttribute('onload','loadedIframe(this);');
 divframeInfo.appendChild(ifElem);
 ifElem.style.display = "inherit";
