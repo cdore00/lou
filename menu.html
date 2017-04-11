@@ -543,9 +543,6 @@ if (e.animationName == "slidein"){
 }
 
 function loadCommande(){
-var J_nom = document.getElementById('f_nom');
-var J_adresse = document.getElementById('f_adresse');
-var J_courriel = document.getElementById('f_courriel');
 var menu1 = document.getElementById('menu1');
 var menu3 = document.getElementById('menu3');
 var url = window.location.href
@@ -577,6 +574,9 @@ for (var i = 3; i < urlParam.length; i++) {
 }
 
 function checkInfo(){
+var f_nom = document.getElementById('f_nom');
+var f_adresse = document.getElementById('f_adresse');
+var f_courriel = document.getElementById('f_courriel');
 //Le cart est vide
 if ( cartCnt == 0 ){
 	if (typeof HTMLDialogElement === 'function') {
