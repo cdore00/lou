@@ -22,26 +22,22 @@
 
 <script type="text/javascript"> 
 <!--
-
 var metsCollection = null;
 var menuCollection = null;
 var cartCnt = 0;
 var progressBar;
 var commandeEnvoye = false;
 var updtInfo = null;
-var nodejsHost = "http://cdore.no-ip.biz:3000/nod/";
+var nodejsHost = "https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
 //"https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
 //"http://192.168.2.10:3000/nod/";
 //"http://cdore.no-ip.biz:3000/nod/";
-
 function loadMetsXML(){
 var divProgress = document.getElementById("divProgress");
 progressBar = document.getElementById("progress");
 progressBar.value = 0;
 divProgress.style.visibility="visible";
-
 var request = getXMLHttpRequest();
-
 if (request){ 
 	if (metsCollection == null){
 		document.body.style.cursor='wait';
@@ -73,15 +69,11 @@ if (request){
 	}
 }else
 	return false;
-
 }
-
 function loadMenuXML(){
 var divProgress = document.getElementById("divProgress"); 
 menuCollection = null;
-
 var request = getXMLHttpRequest();
-
 if (request){
 	if (menuCollection == null){
 		document.body.style.cursor='wait';
@@ -114,7 +106,6 @@ if (request){
 	return false;
 document.body.style.cursor='default';
 }
-
 function afficheMenu(menuColl){
 var liv1 = document.getElementById('liv1');
 var liv3 = document.getElementById('liv3');
@@ -122,18 +113,15 @@ var cartliv1 = document.getElementById('cartliv1');
 var cartliv3 = document.getElementById('cartliv3');
 var menu1 = document.getElementById('menu1');
 var menu3 = document.getElementById('menu3');
-
 liv1.textContent = menuColl.childNodes[0].childNodes[1].childNodes[1].textContent;
 cartliv1.textContent = liv1.textContent;
 liv3.textContent = menuColl.childNodes[0].childNodes[1].childNodes[5].textContent;
 cartliv3.textContent = liv3.textContent;
 afficheMenuLiv(1, menu1, menuColl.childNodes[0].childNodes[3], menuColl.childNodes[0].childNodes[7]);
 afficheMenuLiv(3, menu3, menuColl.childNodes[0].childNodes[5], menuColl.childNodes[0].childNodes[7]);
-
 if (updtInfo)  // Mise à jour d'une commande envoyée
 	loadCommande();
 }
-
 function afficheMenuLiv(jour, menuLiv, menuLivColl, menuXColl){
 var cnt = 1;
 //Menu lundi ou mercredi
@@ -153,7 +141,6 @@ for(var i = 1; i < menuXColl.childNodes.length; i += 2){
 	}
 	}
 }
-
 function ajouterMenu(jour, menuLiv, mets, desc, prix, lien, id){
 var itemCode;
 // Si c'est un mets du fichier mets.XML
@@ -180,37 +167,31 @@ liElem.innerHTML = itemCode;
 menuLiv.appendChild(liElem);
 //<span class="menuPlat">Pain de viande et pur�e de patates douces 8$</span>&#8239;
 }
-
 function hideShow(){
 var showPhoto = document.getElementById('showPhoto');
 var objImg = document.getElementById('objImg');
 var imgDesc = document.getElementById('imgDesc');
-
 	showPhoto.style.visibility="hidden";
 	//objImg.style.transitionDuration = "0s";
 	imgDesc.innerHTML = '';
 	objImg.src = "";
 	objImg.style.maxWidth  = '150px';
 }
-
 function expansion(obj, photoName, desc, prix){
 var showPhoto = document.getElementById('showPhoto');
 var objImg = document.getElementById('objImg');
 var imgDesc = document.getElementById('imgDesc');
 var objImgMaxWidth
-
 	objImg.style.transitionDuration = "0.4s";
 	objImg.src = "misc/spin.gif";
 	//obj.scrollIntoView (true);
 	showPhoto.style.top = document.body.scrollTop + 'px';
 	showPhoto.style.left = '5px';
-
 	showPhoto.style.visibility="visible";
 	objImg.src=atob(photoName);
 	objImg.style.maxWidth = (getWindowWidth() - 10) + 'px';
 	imgDesc.innerHTML = atob(desc) + '<p class="dimen">' + prix + '</p>';
 }
-
 function ajouterPanier(jour, descMets, prixMets, Oli, id){
 var cart_count = document.getElementById('cart-count');
 cartContent.addChoice(jour, atob(descMets), prixMets, id);
@@ -221,18 +202,15 @@ Oli.childNodes[0].classList.remove("zoomOutUp");
 void Oli.childNodes[0].offsetWidth;
 Oli.childNodes[0].classList.add("zoomOutUp");
 }
-
 // Define cartContent Object
 var cartContent = {
     // setup properties of cartContent object
     id:"cartContent",
     listeChoix : new Array()
 }
-
 cartContent.addChoice = function (jour, desc, prix, id) {
 	this.listeChoix[this.listeChoix.length] = new addMets(jour, desc, prix, id);
 }
-
 function addMets(jour, desc, prix, id){
 this.jour=jour;
 this.desc=desc;
@@ -241,12 +219,10 @@ this.id=id;
 this.deleted=false;
 }
 // End Define cartContent Object
-
 function showCart(){
 var divCart = document.getElementById('divCart');
 var cartTitle = document.getElementById('cartTitle');
 var f_nom = document.getElementById('f_nom');
-
 if (divCart.style.width == "100%"){
 divCart.style.webkitTransition  = "";
 transitionsSupported = false;
@@ -259,12 +235,9 @@ transitionsSupported = false;
 	alert(divCart.style.webkitTransition);
 return true;
 }
-
 //alert("Transition");
-
 if (transitionsSupported)  //util.js
 	divCart.style.webkitTransition  = "0.3s";
-
 getInfo();
 if (!commandeEnvoye)
 	refreshCart();
@@ -283,7 +256,6 @@ setTimeout("cartTitle.scrollIntoView();", 400);
 //divCart.style.zIndex = 2000;
 	
 }
-
 function refreshCart(){
 var jour1 = document.getElementById('jour1');
 var jour3 = document.getElementById('jour3');
@@ -291,7 +263,6 @@ var subEmail = document.getElementById('subEmail');
 var liv1 = document.getElementById('liv1');
 var liv3 = document.getElementById('liv3');
 var formattedBody = "Bonjour, \n\nVoici ma commande \n";
-
 //Supprimer les �l�ments actuels
 for(var i = 0; i < jour1.childNodes.length; i++){
 	jour1.removeChild(jour1.childNodes[0]);
@@ -329,14 +300,11 @@ for(var i = 0; i < cartContent.listeChoix.length; i++){
 formattedBody = formattedBody + "\n" + GetCookie('cartAdresse');
 formattedBody = formattedBody + "\n\nMerci,\n\n" + GetCookie('cartNom');
 subEmail.href = "mailto: lou@loupopote.com?Subject=Commande Lou popote&body=" + encodeURIComponent(formattedBody);
-
 }
-
 function closeCart(){
 var menuCart = document.getElementById('menu-cart');
 var divCart = document.getElementById('divCart');
 var	posMenu = posObj(menuCart);
-
 divCart.style.top= posMenu.y + 60 + "px";
 divCart.style.left= posMenu.x + 60 + "px";
 divCart.style.width="0%";
@@ -344,22 +312,18 @@ divCart.style.height="0%";
 saveInfo();
 setTimeout("divCart.style.visibility='hidden';", 300);
 }
-
 function saveInfo(){
 var f_nom = document.getElementById('f_nom');
 var f_adresse = document.getElementById('f_adresse');
 var f_courriel = document.getElementById('f_courriel');
-
 SetCook('cartNom', f_nom.value);
 SetCook('cartAdresse', f_adresse.value);
 SetCook('cartMail', f_courriel.value);
 }
-
 function getInfo(returnInfo){
 var f_nom = document.getElementById('f_nom');
 var f_adresse = document.getElementById('f_adresse');
 var f_courriel = document.getElementById('f_courriel');
-
 f_nom.value = GetCookie('cartNom');
 f_adresse.value = GetCookie('cartAdresse');
 f_courriel.value = GetCookie('cartMail');
@@ -367,7 +331,6 @@ if (returnInfo){
 	return "app.js?nam=" + encodeURIComponent(f_nom.value) + "&adr=" + encodeURIComponent(f_adresse.value) + "&em=" + encodeURIComponent(f_courriel.value);
 }
 }
-
 function deleteItem(aObj){
 var cart_count = document.getElementById('cart-count');
 cartCnt = cartCnt - 1;
@@ -375,16 +338,13 @@ cart_count.innerHTML = cartCnt;
 cartContent.listeChoix[aObj.alt].deleted = true;
 refreshCart();
 }
-
 function subCommForm(deleteCommand){
 var boutonsAjouter = document.querySelectorAll(".ajouterCart");
 var boutonsDelete = document.querySelectorAll(".deleteCart");
-
 if (deleteCommand){
 	if (!confirm("Supprimer cette commande ?"))
-		return false;
+		return;
 }
-
 if (commandeEnvoye){
 	alert("Cette commanda a déjà été envoyée.\nFermeture du panier...");
 	closeCart();
@@ -403,17 +363,13 @@ if (commandeEnvoye){
 }
 
 function subProgress(){
-
 progressBar.value = progressBar.value + 0.05;
-
 if (progressBar.value >= 1){
 	var divProgress = document.getElementById("divProgress");
 	divProgress.style.visibility="hidden";	
 	}else{
 	setTimeout("subProgress();", 50);}
 }
-
-
 function submitForm(deleteCommand){
 var cartliv1 = document.getElementById('cartliv1');
 var cartliv3 = document.getElementById('cartliv3');
@@ -424,7 +380,6 @@ var mailInfoJ1 = "&L1=" + cartliv1.innerHTML;
 var mailInfoJ3 = "&L3=" + cartliv3.innerHTML;
 var strCom = "";
 var rangeInfo = "";
-
 if (checkInfo()){
 	var divProgress = document.getElementById("divProgress");
 	//frameInfo.style.display = "inherit";
@@ -468,11 +423,8 @@ ifElem.style.display = "inherit";
 	return false;
 }
 }
-
 function oldSub(strCom){
-
 xhr = getXMLHttpRequest();
-
   xhr.onloadend = function() {
     var text = xhr.responseText;
 //	var subComm = document.getElementById('subComm');
@@ -488,27 +440,22 @@ xhr = getXMLHttpRequest();
 	//xhr.setRequestHeader("Origin", "https://rawgit.com");
 	xhr.send(null);	
 }
-
 function loadedIframe(objIframe){
 var frameInfo = document.getElementById('frameInfo');
 var divProgress = document.getElementById("divProgress");
 var url = frameInfo.src;
-
 if (url.indexOf("vide.html") == -1){
 //alert("iFrame URL=" + frameInfo.src);
 	}
 }
-
 function validEmail(email){
 	var emailReg = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
 	var valid = emailReg.test(email);
-
 	if(valid) 
         return true;
      else 
     	return false;
 }
-
 function initPageMenu(){
 var dialogBox = document.getElementById('dialogBox');
 var divframeInfo = document.getElementById('divframeInfo');
@@ -520,19 +467,16 @@ if (urlInfo.indexOf("rang=") != -1){  // Modifier une commande
 if (typeof HTMLDialogElement !== 'function') {
 		dialogBox.style.visibility="hidden";
 	} 
-
 //var ifElem = document.createElement("iframe");
 //ifElem.setAttribute('id', 'frameInfo');	
 //ifElem.setAttribute('src', 'vide.html');
 //ifElem.setAttribute('onload','loadedIframe(this);');
 //divframeInfo.appendChild(ifElem);
-
 initPage();
 menuList.addEventListener("animationend", updateAnimation, true);
 loadMetsXML();
 //alert(performance.navigation.type);
 }
-
 var updateAnimation = function(e){
 if (e.animationName == "slidein"){
 	var menuList = document.getElementById('menuList');
@@ -541,8 +485,8 @@ if (e.animationName == "slidein"){
 }
 //alert(e.animationName);
 }
-
 function loadCommande(){
+var subDelete = document.getElementById('subDelete');
 var menu1 = document.getElementById('menu1');
 var menu3 = document.getElementById('menu3');
 var url = window.location.href
@@ -550,7 +494,6 @@ var arr = url.split("/");
 var urlParam = updtInfo.split("$");
 	
 getInfo();
-
 for (var i = 3; i < urlParam.length; i++) {
 	var arrInfo = urlParam[i].split("*");
 	if (arrInfo[0] == 1)
@@ -570,9 +513,9 @@ for (var i = 3; i < urlParam.length; i++) {
 }
 	updtInfo = decodeURIComponent(urlParam[0]);
 	cartTitle.innerHTML = cartTitle.innerHTML + '<p class="smallF">Soumis: ' + decodeURIComponent(urlParam[2]) + '</p>';
+	subDelete.style.display = "inherit";
 	showCart();
 }
-
 function checkInfo(){
 var f_nom = document.getElementById('f_nom');
 var f_adresse = document.getElementById('f_adresse');
@@ -622,7 +565,6 @@ return false;
 }
 return true;
 }
-
 // -->
 </script> 
 </head>
@@ -764,4 +706,4 @@ return true;
 		<a href="javascript:dialogBox.close()" title="Close" class="closeModal">X</a>
 	</dialog>
  </body>	 
- </html>
+</html>
