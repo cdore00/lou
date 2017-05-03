@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, user-scalable=yes" />
+
+<style>
+
+#objModal{
+position: absolute;
+display: none;
+top: 0px;
+left: 0px;	
+background: #eee;
+opacity: 0.7;
+width: 100%;
+height: 100%;
+z-index: 10000;
+}
+
+#objClip{
+
+background: #fff;
+opacity: 1;
+position: absolute;
+top: 10px;
+left: 5px;
+width = 320;
+border: buttonhighlight 2px inset;
+z-index: 10000;
+}
+
+#divVideo{
+position: relative;
+}
+
+#resPhoto{
+position: absolute;
+top: 0px;
+left: 0px;
+width: 320;
+display: none;
+}
+
+#buttonZone{
+background: #eee;
+display: none;
+}
+
+#buttonZone button{
+    width: 32%;
+    padding: inherit;
+	border: buttonhighlight 2px outset;
+}
+
+</style>
+
+<script type="text/javascript"> 
+<!--
+
+var nodejsHost = "http://cdore.no-ip.biz:3000/nod/";
+//"https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
+//"http://192.168.2.10:3000/nod/";
+//"http://cdore.no-ip.biz:3000/nod/";
+
+function init(){
+
+
+(function() {
+
+var data = null;
+var vendorURL;
+  var streaming = false,
+      objModal      = document.querySelector('#objModal'),
+	  objClip      = document.querySelector('#objClip'),
+	  video        = document.querySelector('#video'),
+      canvas       = document.querySelector('#canvas'),
+      resPhoto     = document.querySelector('#resPhoto'),
+	  buttonZone   = document.querySelector('#buttonZone'),
+	  butRetry     = document.querySelector('#butRetry'),
+	  butOk        = document.querySelector('#butOk'),
+	  butCancel    = document.querySelector('#butCancel'),
+      //startbutton  = document.querySelector('#startbutton'),
+      width = 320,
+      height = 0;
+
+  navigator.getMedia = ( navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia ||
+                         navigator.msGetUserMedia);
+
+  navigator.getMedia(
+    {
+      video: true,
+      audio: false
+    },
+    function(stream) {
+      if (navigator.mozGetUserMedia) {
+        video.mozSrcObject = stream;
+      } else {
+        vendorURL = window.URL || window.webkitURL;
+        video.src = vendorURL.createObjectURL(stream);
+      }
+      video.play();
+	   
+    },
+    function(err) {
+      console.log("An error occured! " + err);
+    }
+  );
+
+  objModal.style.display="inherit";
+  //objClip.style.left = ((objModal.offsetWidth - 320) / 2) + "px";
+
+  video.addEventListener('canplay', function(ev){
+    if (!streaming) {
+      height = video.videoHeight / (video.videoWidth/width);
+      video.setAttribute('width', width);
+      video.setAttribute('height', height);
+      canvas.setAttribute('width', width);
+      canvas.setAttribute('height', height);
+      streaming = true;
+    }
+  }, false);
+
+  function takepicture() {
+    canvas.width = width;
+    canvas.height = height;
+    canvas.getContext('2d').drawImage(video, 0, 0, width, height);
+    data = canvas.toDataURL('image/png');
+	buttonZone.style.display="inherit";
+  }
+
+   video.addEventListener('click', function(ev){
+  //var resPhoto = document.getElementById('resPhoto');
+  resPhoto.style.display="inherit";
+      takepicture();
+    ev.preventDefault();
+  }, false);
+
+  butRetry.addEventListener('click', function(ev){
+	resPhoto.style.display="none";
+	data = null;
+	ev.preventDefault();
+  }, false);
+
+   butOk.addEventListener('click', function(ev){
+    if (data == null)
+		takepicture();
+    capture(data);
+	stopVideo();
+	objModal.style.display="none";
+    ev.preventDefault();
+  }, false);
+  
+  butCancel.addEventListener('click', function(ev){
+	stopVideo();
+	objModal.style.display="none";
+    ev.preventDefault();
+  }, false);
+  
+  function stopVideo(){
+	if (video.mozSrcObject){
+		video.mozSrcObject.stop();
+		video.src = "";
+	}else{
+		video.src = "";
+		//vendorURL.stop();
+		vendorURL = null;
+	}
+  }
+
+})();
+
+}
+
+
+function capture(data){
+//alert(data);
+sendServ(data);
+}
+
+
+function sendServ(data){
+	var strCom = nodejsHost + "sendImage?" ;
+	//+ encodeURIComponent(data);
+  var fd = new FormData();
+  fd.append("mailInfo", "cdore00@yahoo.ca");
+  fd.append("testInfo", "test");
+  fd.append("afile", data);
+ 
+var dat = {
+    "eMail" : "cdore00@yahoo.ca"
+}
+ 
+  var xhr = new XMLHttpRequest(); 
+
+  xhr.onloadend = function() {
+    var text = xhr.responseText;
+    alert('Response from CORS request to : ' + text);
+  };
+	xhr.open("POST", strCom);
+	//xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
+	xhr.setRequestHeader("Content-Type", "multipart/form-data");
+	//xhr.setRequestHeader("X-mail-image", "cdore00");
+	xhr.send(fd);	
+}
+
+function execP(){
+parseReq('-----------------------------31835669415371\r\nContent-Disposition: form-data; name="mailInfo"\r\n\r\ncdore00@yahoo.ca\r\n-----------------------------31835669415371\r\nContent-Disposition: form-data; name="testInfo"\r\n\r\ntest\r\n-----------------------------31835669415371--\r\n');
+}
+
+function parseReq(body){
+var arrAtt = new Array(); 
+var attStr = 'form-data; name=';
+
+body = body.replace("\r\n", "");
+
+var attPos = body.indexOf(attStr);
+do{
+	body = body.substring(attPos + attStr.length );
+	var attName = body.substring(1, body.indexOf('"',1));
+	body = body.substring(body.indexOf('"',1) + 1);
+	body = body.trim();
+	var attValue = body.substring(0, body.indexOf('--'));
+	attValue = attValue.trim();
+	arrAtt[arrAtt.length] = [attName, attValue];
+	var attPos = body.indexOf(attStr);
+} while (attPos > 0);
+//alert(body);
+}
+	
+// -->
+</script> 
+		
+</head>
+<body onload="init()">
+
+
+<!--<button id="startbutton">Prendre une photo</button>
+<canvas id="canvas"></canvas>
+<img src="http://placekitten.com/g/320/261" id="photo" alt="photo">// -->
+
+<div id="objModal">
+<div id="objClip">
+<div id="divVideo">
+<video id="video"></video>
+<div id="resPhoto"><canvas id="canvas"></canvas></div></div>
+<div id="buttonZone">
+<button id="butRetry">Reprendre</button>
+<button id="butOk">Ok</button>
+<button id="butCancel">Annuler</button>
+<input id="mailTXT" type="text" name="email">
+</div>
+</div>
+</div>
+
+</body>
+</html>
