@@ -107,6 +107,10 @@ var vendorURL;
       }
       video.play();
 	objModal.style.display="inherit";
+  butCancel.addEventListener('click', function(ev){
+	stopStream(stream);
+    ev.preventDefault();
+  }, false);
     },
     function(err) {
       console.log("An error occured! " + err);
@@ -157,11 +161,7 @@ var vendorURL;
     ev.preventDefault();
   }, false);
   
-  butCancel.addEventListener('click', function(ev){
-	stopVideo();
-	objModal.style.display="none";
-    ev.preventDefault();
-  }, false);
+
   
   function stopVideo(){
 	if (video.mozSrcObject){
@@ -184,6 +184,11 @@ function capture(data){
 sendServ(data);
 }
 
+function stopStream(stream) {
+console.log('stop called');
+stream.getVideoTracks().forEach(function (track) {
+    track.stop();
+});
 
 function sendServ(data){
 	var strCom = nodejsHost + "sendImage?" ;
