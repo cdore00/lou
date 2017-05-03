@@ -168,8 +168,8 @@ var vendorURL;
 		video.mozSrcObject.stop();
 		video.src = "";
 	}else{
+		video.pause();
 		video.src = "";
-		navigator.getMedia.stop();
 		vendorURL = null;
 	}
   }
