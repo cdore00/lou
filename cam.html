@@ -206,6 +206,10 @@ var dat = {
 	xhr.send(fd);	
 }
 
+  function update(stream) {
+    document.querySelector('video').src = stream.url;
+  }
+
 function execP(){
 parseReq('-----------------------------31835669415371\r\nContent-Disposition: form-data; name="mailInfo"\r\n\r\ncdore00@yahoo.ca\r\n-----------------------------31835669415371\r\nContent-Disposition: form-data; name="testInfo"\r\n\r\ntest\r\n-----------------------------31835669415371--\r\n');
 }
@@ -244,14 +248,14 @@ do{
 <div id="objModal">
 <div id="objClip">
 <div id="divVideo">
-<video id="video"></video>
+<device type="media" onchange="update(this.data)"></device>
+<video id="video" autoplay></video>
 <div id="resPhoto"><canvas id="canvas"></canvas></div></div>
 <div id="buttonZone">
 <button id="butRetry">Reprendre</button>
 <button id="butOk">Ok</button>
 <button id="butCancel">Annuler</button>
 <input id="mailTXT" type="text" name="email">
-<input type="file" accept="video/*;capture=camcorder">
 </div>
 </div>
 </div>
