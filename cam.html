@@ -188,7 +188,8 @@ function stopStream(stream) {
 console.log('stop called');
 stream.getVideoTracks().forEach(function (track) {
     track.stop();
-})}
+});
+}
 
 function sendServ(data){
 	var strCom = nodejsHost + "sendImage?" ;
