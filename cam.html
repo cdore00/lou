@@ -53,6 +53,10 @@ display: none;
 	border: buttonhighlight 2px outset;
 }
 
+#mailTXT{
+width: 100%;	
+}
+	
 </style>
 
 <script type="text/javascript"> 
@@ -102,14 +106,14 @@ var vendorURL;
         video.src = vendorURL.createObjectURL(stream);
       }
       video.play();
-	   
+	objModal.style.display="inherit";
     },
     function(err) {
       console.log("An error occured! " + err);
     }
   );
 
-  objModal.style.display="inherit";
+  
   //objClip.style.left = ((objModal.offsetWidth - 320) / 2) + "px";
 
   video.addEventListener('canplay', function(ev){
