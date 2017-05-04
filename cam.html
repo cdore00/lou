@@ -61,6 +61,16 @@ width: 97%;
 
 <script type="text/javascript"> 
 <!--
+var supportStorage = (function() {  // Detect localStorage availability for Quiz history, Quiz templates (Custom Quiz) and Overall analysis 
+	try {
+		var mod = "test";
+		localStorage.setItem(mod, mod);
+		localStorage.removeItem(mod);
+		return true;
+	} catch (exception) {
+		return false;
+	}
+}());
 
 var nodejsHost = "http://cdore.no-ip.biz:3000/nod/";
 //"https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
@@ -70,9 +80,11 @@ var nodejsHost = "http://cdore.no-ip.biz:3000/nod/";
 function init(){
 mailTXT = document.getElementById('mailTXT');
 
+if (supportStorage){
 var eMailAdress = localStorage.getItem("eMailAdress");
 if (eMailAdress)
 	mailTXT.value = eMailAdress;
+}
 
 (function() {
 
@@ -177,13 +189,16 @@ objModal.style.display="none";
 function capture(data){
 var eMailAdress = mailTXT.value;
 
+
 if (eMailAdress)
-	localStorage.setItem("eMailAdress", eMailAdress);
+	if (supportStorage)
+		localStorage.setItem("eMailAdress", eMailAdress);
 else{
 	alert("S.v.p. saisir une adresse courriel.");
 	mailTXT.focus();
 	return false;
 }
+
 //alert(data);
 sendServ(eMailAdress, data);
 return true;
