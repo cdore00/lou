@@ -154,7 +154,7 @@ var vendorURL;
 		butRetry = document.getElementById('butRetry');
 		butFile = document.getElementById('butFile');
 		butRetry.style.display="none";
-		butFile.style.display="inherit";
+		//butFile.style.display="inherit";
 		butFile.onchange = readImage;
 		ctx = canvas.getContext("2d");
 		buttonZone.style.display="inherit";
@@ -293,6 +293,7 @@ function sendServ(eMailAdress, data){
 </div>
 <div id="buttonZone">
 <input id="butFile" type="file" accept="image/*;capture=camera" />
+<button id="butCallFile" onclick="butFile.click()">Photo</button>
 <button id="butRetry">Reprendre</button>
 <button id="butOk">Ok</button>
 <button id="butCancel">Annuler</button>
