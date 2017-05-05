@@ -142,6 +142,7 @@ var vendorURL;
 	var ctx;
 //	= canvas2.getContext("2d");
 
+// Stream video
   navigator.getMedia = ( navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
                          navigator.mozGetUserMedia ||
@@ -197,10 +198,12 @@ if (navigator.getMedia){
 	  butFile      = document.querySelector('#butFile'),
 	  butCallFile  = document.querySelector('#butCallFile');
 	  divVideo.style.height = getWidth()  + "px";
-	  canvas.style.height = getWidth()  + "px";
+	  
 		resPhoto.style.display="inherit";
+		resPhoto.style.height = getWidth()  + "px"; 
 		butRetry.style.display="none";
-		//video.style.display="none";
+		video.style.display="none";
+		
 		//butCallFile.style.display="inherit";
 		butFile.onchange = readImage;
 		var ctx = canvas.getContext("2d");
@@ -210,6 +213,7 @@ if (navigator.getMedia){
 		ev.preventDefault();
 	  }, false);
 }
+// End stream video
 
 	divVideo.style.width = getWidth()  + "px";
 	objClip.style.width = getWidth()  + "px";
