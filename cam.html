@@ -32,7 +32,7 @@ z-index: 10000;
 
 #divVideo{
 position: relative;
-width: 100%;
+/*width: 100%;*/
 }
 
 #resPhoto{
@@ -50,13 +50,14 @@ height: 100%;
 
 #buttonZone{
 background: #eee;
-display: none;
+/*display: none;*/
 }
 
 #buttonZone button{
     width: 32%;
-    padding: inherit;
+    padding: inherit !important;
 	border: buttonhighlight 2px outset;
+	display: inline;
 }
 
 #butFile{
@@ -64,7 +65,23 @@ display: none;
 }
 
 #mailTXT{
-width: 97%;	
+width: 98%;	
+}
+
+@media screen and (max-width: 540px), only screen and (min-device-width: 320px) and (max-device-width: 480px), only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) 
+{ 
+
+#buttonZone button{
+	font-size: 1.2em;
+    height: 40px;
+
+}
+
+#mailTXT{
+	font-size: 1.4em;
+	width: 92%;
+}
+
 }
 	
 </style>
@@ -88,7 +105,7 @@ var nodejsHost = "http://cdore.no-ip.biz:3000/nod/";
 //"http://cdore.no-ip.biz:3000/nod/";
 
 function getWidth(){
-return 320;
+return 300;
 }
 
 
@@ -105,11 +122,10 @@ if (eMailAdress)
 
 var data = null;
 var vendorURL;
-
   var streaming = false,
       objModal     = document.querySelector('#objModal'),
 	  objClip      = document.querySelector('#objClip'),
-	  divVideo        = document.querySelector('#divVideo'),
+	  divVideo     = document.querySelector('#divVideo'),
 	  video        = document.querySelector('#video'),
       canvas       = document.querySelector('#canvas'),
       resPhoto     = document.querySelector('#resPhoto'),
@@ -117,18 +133,21 @@ var vendorURL;
 	  butRetry     = document.querySelector('#butRetry'),
 	  butOk        = document.querySelector('#butOk'),
 	  butCancel    = document.querySelector('#butCancel'),
+	  butFile      = document.querySelector('#butFile'),
+	  butCallFile  = document.querySelector('#butCallFile'),
       width = getWidth(),
       height = 0;
 
 	  //canvas2 = document.getElementById('canvas2');
 	var ctx;
 //	= canvas2.getContext("2d");
-	
+
   navigator.getMedia = ( navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
                          navigator.mozGetUserMedia ||
                          navigator.msGetUserMedia);
 
+if (navigator.getMedia){
   navigator.getMedia(
     {
       video: true,
@@ -151,10 +170,8 @@ var vendorURL;
     },
     function(err) {   // Video not available
 		resPhoto.style.display="inherit";
-		butRetry = document.getElementById('butRetry');
-		butFile = document.getElementById('butFile');
 		butRetry.style.display="none";
-		//butFile.style.display="inherit";
+		//butCallFile.style.display="inherit";
 		butFile.onchange = readImage;
 		ctx = canvas.getContext("2d");
 		buttonZone.style.display="inherit";
@@ -165,13 +182,43 @@ var vendorURL;
 	  }, false);
     }
   );
+}else{ //No media availaible
+  var data = null,
+      objModal     = document.querySelector('#objModal'),
+	  objClip      = document.querySelector('#objClip'),
+	  divVideo     = document.querySelector('#divVideo'),
+	  video        = document.querySelector('#video'),
+      canvas       = document.querySelector('#canvas'),
+      resPhoto     = document.querySelector('#resPhoto'),
+	  buttonZone   = document.querySelector('#buttonZone'),
+	  butRetry     = document.querySelector('#butRetry'),
+	  butOk        = document.querySelector('#butOk'),
+	  butCancel    = document.querySelector('#butCancel'),
+	  butFile      = document.querySelector('#butFile'),
+	  butCallFile  = document.querySelector('#butCallFile');
+	  divVideo.style.height = getWidth()  + "px";
+	  canvas.style.height = getWidth()  + "px";
+		resPhoto.style.display="inherit";
+		butRetry.style.display="none";
+		//video.style.display="none";
+		//butCallFile.style.display="inherit";
+		butFile.onchange = readImage;
+		var ctx = canvas.getContext("2d");
+		buttonZone.style.display="inherit";
+	  butCancel.addEventListener('click', function(ev){
+		objModal.style.display="none";
+		ev.preventDefault();
+	  }, false);
+}
 
-  objClip.style.width = width  + "px";
-  //objClip.style.left = ((objModal.offsetWidth - 320) / 2) + "px";
+	divVideo.style.width = getWidth()  + "px";
+	objClip.style.width = getWidth()  + "px";
+	objClip.style.left = (((objModal.offsetWidth - getWidth()) / 2) - 5) + "px";
 
-  video.addEventListener('canplay', function(ev){
+    video.addEventListener('canplay', function(ev){
     if (!streaming) {
       height = video.videoHeight / (video.videoWidth/width);
+	  divVideo.setAttribute('height', height);
       video.setAttribute('width', width);
       video.setAttribute('height', height);
       canvas.setAttribute('width', width);
@@ -179,6 +226,7 @@ var vendorURL;
       streaming = true;
     }
   }, false);
+
 
   function takepicture() {
     canvas.width = width;
@@ -215,13 +263,10 @@ function readImage() {
         FR.onload = function(e) {
            var img = new Image();
            img.src = e.target.result;
-		   //alert(img.height);
            img.onload = function() {
 				height = width * img.height / img.width;
-				//divVideo.style.width = width + "px";
              ctx.drawImage(img, 0, 0, width, height);
 			 data = canvas.toDataURL('image/png');
-			//capture(data);
            };
         };       
         FR.readAsDataURL( this.files[0] );
@@ -233,15 +278,15 @@ function readImage() {
 }
 
 function stopStream(stream) {
-//console.log('stop called');
+if (stream){
 	stream.getVideoTracks().forEach(function (track) {
 		track.stop();
 	});
+	}
 }
 
 function capture(data){
 var eMailAdress = mailTXT.value;
-
 if (eMailAdress && eMailAdress != ""){
 	if (supportStorage)
 		localStorage.setItem("eMailAdress", eMailAdress);
@@ -280,7 +325,6 @@ function sendServ(eMailAdress, data){
 </head>
 <body onload="init()">
 
-
 <!--<button id="startbutton">Prendre une photo</button>
 <canvas id="canvas"></canvas>
 <img src="http://placekitten.com/g/320/261" id="photo" alt="photo">// -->
@@ -292,12 +336,14 @@ function sendServ(eMailAdress, data){
 <div id="resPhoto"><canvas id="canvas"></canvas></div>
 </div>
 <div id="buttonZone">
-<input id="butFile" type="file" accept="image/*;capture=camera" />
-<button id="butCallFile" onclick="butFile.click()">Photo</button>
+
+
 <button id="butRetry">Reprendre</button>
+<button id="butCallFile" onclick="butFile.click()">Photo</button>
 <button id="butOk">Ok</button>
 <button id="butCancel">Annuler</button>
 <input id="mailTXT" type="email" name="email" placeholder="utilisateur@xxxxx.yyy">
+<input id="butFile" type="file" accept="image/*;capture=camera" />
 </div>
 </div>
 </div>
