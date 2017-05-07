@@ -8,7 +8,7 @@
 
 #objModal{
 position: absolute;
-/*display: none*/;
+display: none;
 top: 0px;
 left: 0px;	
 background: #eee;
@@ -25,107 +25,58 @@ opacity: 1;
 position: absolute;
 top: 10px;
 left: 5px;
-/*width = 320;*/
+width = 320;
 border: buttonhighlight 2px inset;
-z-index: 10000;
+z-index: 10001;
 }
 
 #divVideo{
 position: relative;
-/*width: 100%;*/
 }
 
 #resPhoto{
 position: absolute;
 top: 0px;
 left: 0px;
-width: 100%;
+width: 320;
 display: none;
-}
-
-#canvas, #video{
-width: 100%;
-height: 100%;
 }
 
 #buttonZone{
 background: #eee;
-/*display: none;*/
+display: none;
 }
 
 #buttonZone button{
     width: 32%;
-    padding: inherit !important;
+    padding: inherit;
 	border: buttonhighlight 2px outset;
-	display: inline;
-}
-
-#butFile{
-display: none;
-}
-
-#mailTXT{
-width: 98%;	
-}
-
-@media screen and (max-width: 540px), only screen and (min-device-width: 320px) and (max-device-width: 480px), only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) 
-{ 
-
-#buttonZone button{
-	font-size: 1.2em;
-    height: 40px;
-
-}
-
-#mailTXT{
-	font-size: 1.4em;
-	width: 92%;
-}
-
 }
 	
+#mailTXT{
+width: 100%;	
+}
+
 </style>
 
 <script type="text/javascript"> 
 <!--
-var supportStorage = (function() {  // Detect localStorage availability for Quiz history, Quiz templates (Custom Quiz) and Overall analysis 
-	try {
-		var mod = "test";
-		localStorage.setItem(mod, mod);
-		localStorage.removeItem(mod);
-		return true;
-	} catch (exception) {
-		return false;
-	}
-}());
 
 var nodejsHost = "http://cdore.no-ip.biz:3000/nod/";
 //"https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
 //"http://192.168.2.10:3000/nod/";
 //"http://cdore.no-ip.biz:3000/nod/";
 
-function getWidth(){
-return 300;
-}
-
-
 function init(){
-mailTXT = document.getElementById('mailTXT');
 
-if (supportStorage){
-var eMailAdress = localStorage.getItem("eMailAdress");
-if (eMailAdress)
-	mailTXT.value = eMailAdress;
-}
 
 (function() {
 
 var data = null;
 var vendorURL;
   var streaming = false,
-      objModal     = document.querySelector('#objModal'),
+      objModal      = document.querySelector('#objModal'),
 	  objClip      = document.querySelector('#objClip'),
-	  divVideo     = document.querySelector('#divVideo'),
 	  video        = document.querySelector('#video'),
       canvas       = document.querySelector('#canvas'),
       resPhoto     = document.querySelector('#resPhoto'),
@@ -133,22 +84,15 @@ var vendorURL;
 	  butRetry     = document.querySelector('#butRetry'),
 	  butOk        = document.querySelector('#butOk'),
 	  butCancel    = document.querySelector('#butCancel'),
-	  butFile      = document.querySelector('#butFile'),
-	  butCallFile  = document.querySelector('#butCallFile'),
-      width = getWidth(),
+      //startbutton  = document.querySelector('#startbutton'),
+      width = 320,
       height = 0;
 
-	  //canvas2 = document.getElementById('canvas2');
-	var ctx;
-//	= canvas2.getContext("2d");
-
-// Stream video
   navigator.getMedia = ( navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
                          navigator.mozGetUserMedia ||
                          navigator.msGetUserMedia);
 
-if (navigator.getMedia){
   navigator.getMedia(
     {
       video: true,
@@ -163,66 +107,18 @@ if (navigator.getMedia){
       }
       video.play();
 	objModal.style.display="inherit";
-	butCancel.addEventListener('click', function(ev){
-		stopStream(stream);
-		objModal.style.display="none";
-		ev.preventDefault();
-	}, false);
     },
-    function(err) {   // Video not available
-		resPhoto.style.display="inherit";
-		butRetry.style.display="none";
-		//butCallFile.style.display="inherit";
-		butFile.onchange = readImage;
-		ctx = canvas.getContext("2d");
-		buttonZone.style.display="inherit";
+    function(err) {
       console.log("An error occured! " + err);
-	  butCancel.addEventListener('click', function(ev){
-		objModal.style.display="none";
-		ev.preventDefault();
-	  }, false);
     }
   );
-}else{ //No media availaible
-  var data = null,
-      objModal     = document.querySelector('#objModal'),
-	  objClip      = document.querySelector('#objClip'),
-	  divVideo     = document.querySelector('#divVideo'),
-	  video        = document.querySelector('#video'),
-      canvas       = document.querySelector('#canvas'),
-      resPhoto     = document.querySelector('#resPhoto'),
-	  buttonZone   = document.querySelector('#buttonZone'),
-	  butRetry     = document.querySelector('#butRetry'),
-	  butOk        = document.querySelector('#butOk'),
-	  butCancel    = document.querySelector('#butCancel'),
-	  butFile      = document.querySelector('#butFile'),
-	  butCallFile  = document.querySelector('#butCallFile');
-	  divVideo.style.height = getWidth()  + "px";
-	  
-		resPhoto.style.display="inherit";
-		resPhoto.style.height = getWidth()  + "px"; 
-		butRetry.style.display="none";
-		video.style.display="none";
-		
-		//butCallFile.style.display="inherit";
-		butFile.onchange = readImage;
-		var ctx = canvas.getContext("2d");
-		buttonZone.style.display="inherit";
-	  butCancel.addEventListener('click', function(ev){
-		objModal.style.display="none";
-		ev.preventDefault();
-	  }, false);
-}
-// End stream video
-
-	divVideo.style.width = getWidth()  + "px";
-	objClip.style.width = getWidth()  + "px";
-	objClip.style.left = (((objModal.offsetWidth - getWidth()) / 2) - 5) + "px";
-
-    video.addEventListener('canplay', function(ev){
+	
+  //objClip.style.left = ((objModal.offsetWidth - 320) / 2) + "px";
+  
+  
+  video.addEventListener('canplay', function(ev){
     if (!streaming) {
       height = video.videoHeight / (video.videoWidth/width);
-	  divVideo.setAttribute('height', height);
       video.setAttribute('width', width);
       video.setAttribute('height', height);
       canvas.setAttribute('width', width);
@@ -230,7 +126,6 @@ if (navigator.getMedia){
       streaming = true;
     }
   }, false);
-
 
   function takepicture() {
     canvas.width = width;
@@ -240,8 +135,9 @@ if (navigator.getMedia){
 	buttonZone.style.display="inherit";
   }
 
-  video.addEventListener('click', function(ev){
-	resPhoto.style.display="inherit";
+   video.addEventListener('click', function(ev){
+  //var resPhoto = document.getElementById('resPhoto');
+  resPhoto.style.display="inherit";
       takepicture();
     ev.preventDefault();
   }, false);
@@ -252,82 +148,104 @@ if (navigator.getMedia){
 	ev.preventDefault();
   }, false);
 
-  butOk.addEventListener('click', function(ev){
+   butOk.addEventListener('click', function(ev){
     if (data == null)
 		takepicture();
-    if (capture(data))
-		butCancel.click();
+    capture(data);
+	stopVideo();
+	objModal.style.display="none";
     ev.preventDefault();
   }, false);
+  
+  butCancel.addEventListener('click', function(ev){
+	stopVideo();
+	objModal.style.display="none";
+    ev.preventDefault();
+  }, false);
+  
+  function stopVideo(){
+	if (video.mozSrcObject){
+		video.mozSrcObject.stop();
+		video.src = "";
+	}else{
+		video.src = "";
+		//vendorURL.stop();
+		vendorURL = null;
+	}
+  }
 
-  
-function readImage() {
-    if ( this.files && this.files[0] ) {
-        var FR= new FileReader();
-        FR.onload = function(e) {
-           var img = new Image();
-           img.src = e.target.result;
-           img.onload = function() {
-				height = width * img.height / img.width;
-             ctx.drawImage(img, 0, 0, width, height);
-			 data = canvas.toDataURL('image/png');
-           };
-        };       
-        FR.readAsDataURL( this.files[0] );
-    }
-}
-  
 })();
 
 }
 
-function stopStream(stream) {
-if (stream){
-	stream.getVideoTracks().forEach(function (track) {
-		track.stop();
-	});
-	}
-}
 
 function capture(data){
-var eMailAdress = mailTXT.value;
-if (eMailAdress && eMailAdress != ""){
-	if (supportStorage)
-		localStorage.setItem("eMailAdress", eMailAdress);
-}else{
-	alert("S.v.p. saisir une adresse courriel.");
-	mailTXT.focus();
-	return false;
-}
 //alert(data);
-sendServ(eMailAdress, data);
-return true;
+sendServ(data);
 }
 
-function sendServ(eMailAdress, data){
+
+function sendServ(data){
 	var strCom = nodejsHost + "sendImage?" ;
-	var fd = new FormData();
-	fd.append("mailInfo", eMailAdress);
-	fd.append("testInfo", "test");
-	fd.append("afile", data);
+	//+ encodeURIComponent(data);
+  var fd = new FormData();
+  fd.append("mailInfo", "cdore00@yahoo.ca");
+  fd.append("testInfo", "test");
+  fd.append("afile", data);
+ 
+var dat = {
+    "eMail" : "cdore00@yahoo.ca"
+}
  
   var xhr = new XMLHttpRequest(); 
 
   xhr.onloadend = function() {
     var text = xhr.responseText;
-    //alert('Response from CORS request to : ' + text);
+   // alert('Response from CORS request to : ' + text);
   };
 	xhr.open("POST", strCom);
+	//xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
 	xhr.setRequestHeader("Content-Type", "multipart/form-data");
+	//xhr.setRequestHeader("X-mail-image", "cdore00");
 	xhr.send(fd);	
 }
 
+  function update(stream) {
+    document.querySelector('video').src = stream.url;
+  }
+
+function execP(){
+parseReq('-----------------------------31835669415371\r\nContent-Disposition: form-data; name="mailInfo"\r\n\r\ncdore00@yahoo.ca\r
+\n-----------------------------31835669415371\r\nContent-Disposition: form-data; name="testInfo"\r\n\r\ntest\r\n-----------------------------31835669415371
+--\r\n');
+}
+
+function parseReq(body){
+var arrAtt = new Array(); 
+var attStr = 'form-data; name=';
+
+body = body.replace("\r\n", "");
+
+var attPos = body.indexOf(attStr);
+do{
+	body = body.substring(attPos + attStr.length );
+	var attName = body.substring(1, body.indexOf('"',1));
+	body = body.substring(body.indexOf('"',1) + 1);
+	body = body.trim();
+	var attValue = body.substring(0, body.indexOf('--'));
+	attValue = attValue.trim();
+	arrAtt[arrAtt.length] = [attName, attValue];
+	var attPos = body.indexOf(attStr);
+} while (attPos > 0);
+//alert(body);
+}
 	
 // -->
 </script> 
 		
 </head>
 <body onload="init()">
+
 
 <!--<button id="startbutton">Prendre une photo</button>
 <canvas id="canvas"></canvas>
@@ -337,17 +255,12 @@ function sendServ(eMailAdress, data){
 <div id="objClip">
 <div id="divVideo">
 <video id="video"></video>
-<div id="resPhoto"><canvas id="canvas"></canvas></div>
-</div>
+<div id="resPhoto"><canvas id="canvas"></canvas></div></div>
 <div id="buttonZone">
-
-
 <button id="butRetry">Reprendre</button>
-<button id="butCallFile" onclick="butFile.click()">Photo</button>
 <button id="butOk">Ok</button>
 <button id="butCancel">Annuler</button>
-<input id="mailTXT" type="email" name="email" placeholder="utilisateur@xxxxx.yyy">
-<input id="butFile" type="file" accept="image/*;capture=camera" />
+<input id="mailTXT" type="text" name="email">
 </div>
 </div>
 </div>
