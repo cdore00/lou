@@ -419,14 +419,14 @@ if (checkInfo()){
 
 	//strCom = getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
 	//parseQuery(strCom);
-	//SubXHR(strCom);
+	SubXHR(strCom);
 var ifElem = document.createElement("iframe");
 ifElem.setAttribute('id', 'frameInfo');	
 ifElem.setAttribute('src', strCom);
 //ifElem.setAttribute('sandbox', 'allow-same-origin');
 ifElem.setAttribute('seamless', true);
 ifElem.setAttribute('onload','loadedIframe(this);');
-divframeInfo.appendChild(ifElem);
+//divframeInfo.appendChild(ifElem);
 ifElem.style.display = "inherit";
 	//frameInfo.src = strCom;
 	return true;
@@ -455,6 +455,9 @@ xhr = getXMLHttpRequest();
 	fd.append("queryInfo", strComInfo);
 	fd.append("imgfile", imgData);
 
+	
+var strCom = "https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send&response_type=code&client_id=425059252383-7ir1gosfrn60o59b3uvp8du7ehctlmdn.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fgoogserv4-goog-server.1d35.starter-us-east-1.openshiftapps.com%2F";
+	
   xhr.onloadend = function() {
     var text = xhr.responseText;
 	var subComm = document.getElementById('subComm');
@@ -462,13 +465,14 @@ xhr = getXMLHttpRequest();
 	subComm.style.webkitAnimationPlayState = "running";
     //alert('Response from CORS request to : ' + text);
   };
-	xhr.open("POST", strCom);
-
+	//xhr.open("POST", strCom);
+xhr.open("GET", strCom);
 	//xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
 	//xhr.setRequestHeader("Content-Type", "text/plain");
 	//xhr.setRequestHeader("Origin", "https://rawgit.com");
-	xhr.setRequestHeader("Content-Type", "multipart/form-data");
-	xhr.send(fd);	
+//xhr.setRequestHeader("Content-Type", "multipart/form-data");
+//xhr.send(fd);	
+		xhr.send();	
 }
 
 function loadedIframe(objIframe){
