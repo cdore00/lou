@@ -110,7 +110,7 @@ padding-left: 2px;
 	display: inline;
 }
 
-#butFile, #butTrim, #butCallFile{
+#butFile{
 display: none !important;
 }
 
@@ -131,6 +131,9 @@ width: 98%;
 	width: 92%;
 }
 
+.show{
+display: inline !important;
+}
 
 }
 	
@@ -205,6 +208,7 @@ var vendorURL;
                          navigator.msGetUserMedia);
 
 if (navigator.getMedia){
+//alert(navigator.getMedia);
   navigator.getMedia(
     {
       video: true,
@@ -226,9 +230,10 @@ if (navigator.getMedia){
 	}, false);
     },
     function(err) {   // Video not available
+	//alert("Erreur getMedia");
 		resPhoto.style.display="inherit";
 		butRetry.style.display="none";
-		//butCallFile.style.display="inherit";
+		butCallFile.style.display="inline";
 		butFile.onchange = readImage;
 		ctx = canvas.getContext("2d");
 		buttonZone.style.display="inherit";
@@ -240,9 +245,8 @@ if (navigator.getMedia){
     }
   );
 }else{ //No media availaible
-
+//alert("No getMedia");
 	  divVideo.style.height = getWidth()  + "px";
-	  
 		resPhoto.style.display="inherit";
 		resPhoto.style.height = getWidth()  + "px"; 
 		butRetry.style.display="none";
@@ -276,6 +280,9 @@ if (navigator.getMedia){
 
 
   function takepicture() {
+	var buttonZone = document.getElementById('buttonZone');
+	var toolDiv = document.getElementById('toolDiv');
+	var butTrim = document.getElementById('butTrim');
     canvas.width = width;
     canvas.height = height;
     canvas.getContext('2d').drawImage(video, 0, 0, width, height);
@@ -283,6 +290,7 @@ if (navigator.getMedia){
 	setimgData(data);
 	toolDiv.style.display="inherit";
 	buttonZone.style.display="inherit";
+	butTrim.style.display="none";
 	tipTxt.innerHTML = txtRP;
 	tipTxt.title = txtRP;
   }
@@ -303,15 +311,21 @@ if (navigator.getMedia){
 
   
 function readImage() {
+	var buttonZone = document.getElementById('buttonZone');
+	var toolDiv = document.getElementById('toolDiv');
     if ( this.files && this.files[0] ) {
         var FR= new FileReader();
         FR.onload = function(e) {
            var img = new Image();
            img.src = e.target.result;
            img.onload = function() {
-				height = width * img.height / img.width;
-             ctx.drawImage(img, 0, 0, width, height);
-			 setimgData(canvas.toDataURL('image/png'));
+			height = width * img.height / img.width;
+            ctx.drawImage(img, 0, 0, width, height);
+			setimgData(canvas.toDataURL('image/png'));
+			toolDiv.style.display="inherit";
+			buttonZone.style.display="inherit";
+			tipTxt.innerHTML = txtRP;
+			tipTxt.title = txtRP;
            };
         };       
         FR.readAsDataURL( this.files[0] );
@@ -413,12 +427,16 @@ var parentDiv = document.getElementById('zoneDiv');
 }
 
 function showTrimTool(){
-trimDiv = document.getElementById('trimDiv');
-butTrim = document.getElementById('butTrim');
+var trimDiv = document.getElementById('trimDiv');
+var butTrim = document.getElementById('butTrim');
+butTrim.style.display = "inherit !important";
 trimDiv.style.left = (((objClip.offsetWidth - trimDiv.offsetWidth) / 2) ) + "px";
 trimDiv.style.top = (((objClip.offsetHeight - trimDiv.offsetHeight) / 3) ) + "px";
 trimDiv.style.visibility = "visible";
-butTrim.style.display = "inline !important";
+//butTrim.setAttribute('class', "show");
+
+//butTrim.className="show";
+
 }
 
 function trimImg(){
