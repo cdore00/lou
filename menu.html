@@ -17,8 +17,10 @@
 <link rel="stylesheet" type="text/css" href="misc/init.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="misc/Jot.css" />
 <link id="pagestyle" rel="stylesheet" type="text/css" href="misc/photo.css" />
+<link rel="stylesheet" type="text/css" href="misc/takePhoto.css" />
 
 <script type="text/javascript" src="misc/util.js"></script>
+<script type="text/javascript" src="misc/takePhoto.js"></script>
 
 <script type="text/javascript"> 
 <!--
@@ -433,7 +435,7 @@ ifElem.style.display = "inherit";
 }
 }
 
-function parseQuery(info){
+function parseQuery_use_in_servG4(info){
 var str = info;
 
 str = str.split(":").join("");
@@ -451,7 +453,7 @@ xhr = getXMLHttpRequest();
 	var fd = new FormData();
 	fd.append("mailInfo", "cdore00@yahoo.ca");
 	fd.append("queryInfo", strComInfo);
-	fd.append("imgfile", photo);
+	fd.append("imgfile", imgData);
 
   xhr.onloadend = function() {
     var text = xhr.responseText;
@@ -726,6 +728,7 @@ return true;
 <a id="subCommand" class="cart-button" title="Soumettre automatiquement" href="javascript:subCommForm();" >&nbsp;Soumettre&nbsp;</a>
 <a id="subEmail" class="cart-button" title="Soumettre par courriel..." href="mailto:louise@loupopote.com">&nbsp;Courriel&nbsp;</a>
 <a id="subDelete" class="cart-button" title="Supprimer la commande" href="javascript:subCommForm(true);" >&nbsp;Supprimer&nbsp;</a>
+<a id="subPhoto" class="cart-button" title="Joindre une photo" href="javascript:initCamImgCapture();" >&nbsp;Photo&nbsp;</a>
 <a class="cart-button" title="Fermer" href="javascript:closeCart();">&nbsp;&nbsp;&nbsp;Fermer&nbsp;&nbsp;&nbsp;</a>
 </div>
 
@@ -736,5 +739,34 @@ return true;
 		<button class="cart-button" onclick="dialogBox.close()">Fermer</button>
 		<a href="javascript:dialogBox.close()" title="Close" class="closeModal">X</a>
 	</dialog>
+
+<!--Take photo elements // -->
+<div id="objModal">
+<div id="objClip">
+<div id="divVideo" >
+<video id="video"></video>
+<div id="resPhoto" ondrop="CIdrop(event)" ondragover="CIallowDrop(event)"><canvas id="canvas" ></canvas>
+<div id="trimDiv" draggable="true" ondragstart="CIdrag(event)"></div>
+</div>
+<div id="tipDiv"><span id="tipTxt" title="Cliquer pour photo">Cliquer pour photo</span>
+<div id="toolDiv"><span id="trimImg"><img src="trim.png" onclick="showTrimTool()"/></span><span id="rotateImg"><img src="rotate90.png" onclick="rotateImg()"/></span></div>
+</div>
+</div>
+
+<div id="buttonZone">
+<button id="butRetry" onclick="retryCapture()">Reprendre</button>
+<button id="butCallFile" onclick="butFile.click()">Photo</button>
+<button id="butOk">Ok</button>
+<button id="butCancel">Annuler</button>
+<button id="butTrim" onclick="trimImg()">Rogner</button>
+<button id="butTest" onclick="test()">Test</button>
+<input id="mailTXT" type="email" name="email" placeholder="utilisateur@xxxxx.yyy">
+<input id="butFile" type="file" accept="image/*;capture=camera" />
+</div>
+</div>
+<canvas id="canvas2" ></canvas>
+<img id="imgObj" src="#" style="display: block;"/>
+</div>
+
  </body>	 
 </html>
