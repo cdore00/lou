@@ -8,7 +8,7 @@
 
 #objModal{
 position: absolute;
-/*display: none*/;
+visibility: hidden;
 top: 0px;
 left: 0px;	
 background: #eee;
@@ -188,6 +188,7 @@ var vendorURL;
 	  video        = document.querySelector('#video'),
       canvas       = document.querySelector('#canvas'),
       resPhoto     = document.querySelector('#resPhoto'),
+	  trimDiv      = document.querySelector('#trimDiv'),
 	  buttonZone   = document.querySelector('#buttonZone'),
 	  butRetry     = document.querySelector('#butRetry'),
 	  butOk        = document.querySelector('#butOk'),
@@ -222,10 +223,11 @@ if (navigator.getMedia){
         video.src = vendorURL.createObjectURL(stream);
       }
       video.play();
-	objModal.style.display="inherit";
+	objModal.style.visibility="visible";
 	butCancel.addEventListener('click', function(ev){
 		stopStream(stream);
-		objModal.style.display="none";
+		objModal.style.visibility="hidden";
+		trimDiv.style.visibility="hidden";
 		ev.preventDefault();
 	}, false);
     },
@@ -239,7 +241,8 @@ if (navigator.getMedia){
 		buttonZone.style.display="inherit";
       console.log("An error occured! " + err);
 	  butCancel.addEventListener('click', function(ev){
-		objModal.style.display="none";
+		objModal.style.visibility="hidden";
+		trimDiv.style.visibility="hidden";
 		ev.preventDefault();
 	  }, false);
     }
@@ -256,7 +259,7 @@ if (navigator.getMedia){
 		var ctx = canvas.getContext("2d");
 		buttonZone.style.display="inherit";
 	  butCancel.addEventListener('click', function(ev){
-		objModal.style.display="none";
+		objModal.style.visibility="hidden";
 		ev.preventDefault();
 	  }, false);
 }
@@ -500,6 +503,7 @@ alert("Test");
 }
 	
 // -->
+
 </script> 
 		
 </head>
