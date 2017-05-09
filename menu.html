@@ -467,9 +467,10 @@ var strCom = "https://accounts.google.com/o/oauth2/auth?access_type=offline&scop
   };
 	//xhr.open("POST", strCom);
 xhr.open("GET", strCom);
-	//xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
+	xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
 	//xhr.setRequestHeader("Content-Type", "text/plain");
-	//xhr.setRequestHeader("Origin", "https://rawgit.com");
+	xhr.setRequestHeader("Origin", "https://cdore00.github.io");
+	
 //xhr.setRequestHeader("Content-Type", "multipart/form-data");
 //xhr.send(fd);	
 		xhr.send();	
