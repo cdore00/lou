@@ -456,7 +456,7 @@ xhr = getXMLHttpRequest();
 	fd.append("imgfile", imgData);
 
 	
-var strCom = "https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send&response_type=code&client_id=425059252383-7ir1gosfrn60o59b3uvp8du7ehctlmdn.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fgoogserv4-goog-server.1d35.starter-us-east-1.openshiftapps.com%2F";
+var strCom = "https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send&response_type=code&client_id=425059252383-7ir1gosfrn60o59b3uvp8du7ehctlmdn.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fcdore00.github.io%2F";
 	
   xhr.onloadend = function() {
     var text = xhr.responseText;
@@ -467,10 +467,10 @@ var strCom = "https://accounts.google.com/o/oauth2/auth?access_type=offline&scop
   };
 	//xhr.open("POST", strCom);
 xhr.open("GET", strCom);
-	xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
+	//xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
 	//xhr.setRequestHeader("Content-Type", "text/plain");
 	//xhr.setRequestHeader("Origin", "https://cdore00.github.io");
-	xhr.setRequestHeader("Access-Control-Allow-Origin", "https://cdore00.github.io");
+	//xhr.setRequestHeader("Access-Control-Allow-Origin", "https://cdore00.github.io");
 //xhr.setRequestHeader("Content-Type", "multipart/form-data");
 //xhr.send(fd);	
 		xhr.send();	
