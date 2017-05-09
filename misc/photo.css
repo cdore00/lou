@@ -60,11 +60,17 @@ margin-left: 15px;
 margin-bottom: 0.5em;
 text-align:left;
 }
- 
+
 h3{
-visibility:hidden;
+/*visibility:hidden;
 width:0px;
-height:0px;
+height:0px;*/
+color: #AD8700;
+}
+ 
+h4{
+font-size:0.8em;
+font-weight:bold;
 color: #AD8700;
 }
 
@@ -154,7 +160,8 @@ background: #AD8700;
 }
 
 #subComm{
-position: relative;
+/*float: inherit;*/
+display: block;
 text-align: left;
 top: 10px;
 left: 10px;
