@@ -419,14 +419,14 @@ if (checkInfo()){
 
 	//strCom = getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
 	//parseQuery(strCom);
-	SubXHR(strCom);
+	//SubXHR(strCom);
 var ifElem = document.createElement("iframe");
 ifElem.setAttribute('id', 'frameInfo');	
 ifElem.setAttribute('src', strCom);
 //ifElem.setAttribute('sandbox', 'allow-same-origin');
 ifElem.setAttribute('seamless', true);
 ifElem.setAttribute('onload','loadedIframe(this);');
-//divframeInfo.appendChild(ifElem);
+divframeInfo.appendChild(ifElem);
 ifElem.style.display = "inherit";
 	//frameInfo.src = strCom;
 	return true;
