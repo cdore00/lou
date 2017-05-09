@@ -1,0 +1,132 @@
+
+#objModal{
+font-size:0.5em;
+position: absolute;
+visibility: hidden;
+top: 0px;
+left: 0px;	
+background: #eee;
+opacity: 1;
+width: 100%;
+height: 100%;
+z-index: 10000;
+}
+
+#objClip{
+
+background: #fff;
+opacity: 1;
+position: absolute;
+top: 10px;
+left: 5px;
+/*width = 320;*/
+border: buttonhighlight 2px inset;
+z-index: 10000;
+}
+
+#divVideo{
+position: relative;
+/*width: 100%;*/
+}
+
+#resPhoto{
+position: absolute;
+top: 0px;
+left: 0px;
+width: 100%;
+display: none;
+}
+
+#canvas, #video{
+width: 100%;
+height: 100%;
+background: black;
+}
+
+#video{
+cursor: pointer;
+}
+
+#trimDiv{
+position: absolute;
+visibility: hidden;
+top: 0px;
+left: 0px;
+width: 150px;
+height: 150px;
+background: transparent;
+border: solid 3px red;
+}
+
+
+#canvas2, #imgObj{
+/*visibility: hidden;*/
+border: solid 1px black;
+}
+
+#tipDiv, #toolDiv{
+position: absolute;
+top: 0px;
+left: 0px;
+width: 100%;
+height: 30px;
+text-align: center;
+color: white;
+opacity: 1;
+}
+
+#toolDiv{
+display: none;
+}
+
+#rotateImg{
+position: absolute;
+right: 0px;
+cursor: pointer;
+}
+
+#trimImg{
+position: absolute;
+left: 0px;
+cursor: pointer;
+}
+
+#buttonZone{
+background: #eee;
+padding-left: 2px;
+/*display: none;*/
+}
+
+#buttonZone button{
+    width: 32%;
+    padding: inherit !important;
+	border: buttonhighlight 2px outset;
+	display: inline;
+}
+
+#butFile{
+display: none !important;
+}
+
+#mailTXT{
+width: 98%;	
+}
+
+@media screen and (max-width: 540px), only screen and (min-device-width: 320px) and (max-device-width: 480px), only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) 
+{ 
+
+#buttonZone button{
+	font-size: 1.2em;
+    height: 40px;
+}
+
+#mailTXT{
+	font-size: 1.4em;
+	width: 92%;
+}
+
+.show{
+display: inline !important;
+}
+
+}
