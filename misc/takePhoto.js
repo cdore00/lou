@@ -225,7 +225,7 @@ if (eMailAdress && eMailAdress != ""){
 	return false;
 }
 //alert(data);
-sendServ(eMailAdress, imgData);
+//sendServ(eMailAdress, imgData);
 return true;
 }
 
