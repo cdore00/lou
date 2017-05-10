@@ -745,33 +745,7 @@ return true;
 		<a href="javascript:dialogBox.close()" title="Close" class="closeModal">X</a>
 	</dialog>
 
-<!--Take photo elements // -->
-<div id="objModal">
-<div id="objClip">
-<div id="divVideo" >
-<video id="video"></video>
-<div id="resPhoto" ondrop="CIdrop(event)" ondragover="CIallowDrop(event)"><canvas id="canvas" ></canvas>
-<div id="trimDiv" draggable="true" ondragstart="CIdrag(event)"></div>
-</div>
-<div id="tipDiv"><span id="tipTxt" title="Cliquer pour photo">Cliquer pour photo</span>
-<div id="toolDiv"><span id="trimImg"><img src="trim.png" onclick="showTrimTool()"/></span><span id="rotateImg"><img src="rotate90.png" onclick="rotateImg()"/></span></div>
-</div>
-</div>
 
-<div id="buttonZone">
-<button id="butRetry" onclick="retryCapture()">Reprendre</button>
-<button id="butCallFile" onclick="butFile.click()">Photo</button>
-<button id="butOk">Ok</button>
-<button id="butCancel">Annuler</button>
-<button id="butTrim" onclick="trimImg()">Rogner</button>
-<button id="butTest" onclick="test()">Test</button>
-<input id="mailTXT" type="email" name="email" placeholder="utilisateur@xxxxx.yyy">
-<input id="butFile" type="file" accept="image/*;capture=camera" />
-</div>
-</div>
-<canvas id="canvas2" ></canvas>
-<img id="imgObj" src="#" style="display: block;"/>
-</div>
 
  </body>	 
 </html>
