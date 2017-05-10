@@ -101,7 +101,9 @@ if (navigator.getMedia){
 //alert("No getMedia");
 		setNoVideo();
 	  butCancel.addEventListener('click', function(ev){
+		  trimDiv.style.visibility="hidden";
 		objModal.style.visibility="hidden";
+		
 		ev.preventDefault();
 	  }, false);
 }
