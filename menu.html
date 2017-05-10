@@ -509,7 +509,7 @@ if (typeof HTMLDialogElement !== 'function') {
 //ifElem.setAttribute('onload','loadedIframe(this);');
 //divframeInfo.appendChild(ifElem);
 initPage();
-	alert("loaded");
+	alert("loaded2");
 menuList.addEventListener("animationend", updateAnimation, true);
 loadMetsXML();
 //alert(performance.navigation.type);
@@ -753,8 +753,10 @@ return true;
 <div id="objClip">
 
 <div id="divVideo" >
-<video id="video"></video>
 
+<div id="resPhoto" ondrop="CIdrop(event)" ondragover="CIallowDrop(event)"><canvas id="canvas" ></canvas>
+<div id="trimDiv" draggable="true" ondragstart="CIdrag(event)"></div>
+</div>
 <div id="tipDiv"><span id="tipTxt" title="Cliquer pour photo">Cliquer pour photo</span>
 <div id="toolDiv"><span id="trimImg"><img src="trim.png" onclick="showTrimTool()"/></span><span id="rotateImg"><img src="rotate90.png" onclick="rotateImg();"/></span></div>
 </div>
