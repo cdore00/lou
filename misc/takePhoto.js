@@ -47,7 +47,7 @@ var vendorURL;
       canvas       = document.querySelector('#canvas'),
       resPhoto     = document.querySelector('#resPhoto'),
 	  trimDiv      = document.querySelector('#trimDiv'),
-	  buttonZone   = document.querySelector('#buttonZone'),
+	  //buttonZone   = document.querySelector('#buttonZone'),
 	  butRetry     = document.querySelector('#butRetry'),
 	  butOk        = document.querySelector('#butOk'),
 	  butCancel    = document.querySelector('#butCancel'),
@@ -87,14 +87,8 @@ if (navigator.getMedia){
 	}, false);
     },
     function(err) {   // Video not available
-	alert("Erreur getMedia");
-		resPhoto.style.display="inherit";
-		butRetry.style.display="none";
-		butCallFile.style.display="inline";
-		butFile.onchange = readImage;
-		ctx = canvas.getContext("2d");
-		buttonZone.style.display="inherit";
-		objModal.style.visibility="visible";
+	//alert("Erreur getMedia");
+		setNoVideo();
       console.log("An error occured! " + err);
 	  butCancel.addEventListener('click', function(ev){
 		objModal.style.visibility="hidden";
@@ -104,23 +98,23 @@ if (navigator.getMedia){
     }
   );
 }else{ //No media available
-alert("No getMedia");
-	  //divVideo.style.height = width + "px";
-		resPhoto.style.display="inherit";
-		//resPhoto.style.height = width + "px"; 
-		butRetry.style.display="none";
-		video.style.display="none";
-		butCallFile.style.display="inline";
-		butFile.onchange = readImage;
-		var ctx = canvas.getContext("2d");
-		buttonZone.style.display="inherit";
-		objModal.style.visibility="visible";
+//alert("No getMedia");
+		setNoVideo();
 	  butCancel.addEventListener('click', function(ev){
 		objModal.style.visibility="hidden";
 		ev.preventDefault();
 	  }, false);
 }
 // End stream video
+	
+	function setNoVideo(){
+		resPhoto.style.display="inherit";
+		butRetry.style.display="none";
+		butCallFile.style.display="inline";
+		butFile.onchange = readImage;
+		ctx = canvas.getContext("2d");
+		objModal.style.visibility="visible";
+	}
 	
 	canvas.width = width;
 	divVideo.style.width = width + "px";
@@ -141,7 +135,7 @@ alert("No getMedia");
 
 
   function takepicture() {
-	var buttonZone = document.getElementById('buttonZone');
+	//var buttonZone = document.getElementById('buttonZone');
 	var toolDiv = document.getElementById('toolDiv');
 	var butTrim = document.getElementById('butTrim');
     canvas.width = width;
@@ -150,7 +144,7 @@ alert("No getMedia");
     data = canvas.toDataURL('image/png');
 	setimgData(data);
 	toolDiv.style.display="inherit";
-	buttonZone.style.display="inherit";
+	//buttonZone.style.display="inherit";
 	butTrim.style.display="none";
 	tipTxt.innerHTML = txtRP;
 	tipTxt.title = txtRP;
@@ -191,7 +185,7 @@ var imgObj = document.getElementById('imgObj')
             ctx.drawImage(img, 0, 0, width, height);
 			setimgData(canvas.toDataURL('image/png'));
 			toolDiv.style.display="inherit";
-			buttonZone.style.display="inherit";
+			//buttonZone.style.display="inherit";
 			tipTxt.innerHTML = txtRP;
 			tipTxt.title = txtRP;
            };
