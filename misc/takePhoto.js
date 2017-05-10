@@ -87,7 +87,7 @@ if (navigator.getMedia){
 	}, false);
     },
     function(err) {   // Video not available
-	//alert("Erreur getMedia");
+	alert("Erreur getMedia");
 		resPhoto.style.display="inherit";
 		butRetry.style.display="none";
 		butCallFile.style.display="inline";
@@ -104,7 +104,7 @@ if (navigator.getMedia){
     }
   );
 }else{ //No media available
-//alert("No getMedia");
+alert("No getMedia");
 	  //divVideo.style.height = width + "px";
 		resPhoto.style.display="inherit";
 		//resPhoto.style.height = width + "px"; 
