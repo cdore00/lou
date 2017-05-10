@@ -108,6 +108,7 @@ if (navigator.getMedia){
 // End stream video
 	
 	function setNoVideo(){
+		video.parentNode.removeChild(video);
 		resPhoto.style.display="inherit";
 		butRetry.style.display="none";
 		butCallFile.style.display="inline";
