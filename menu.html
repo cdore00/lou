@@ -509,7 +509,7 @@ if (typeof HTMLDialogElement !== 'function') {
 //ifElem.setAttribute('onload','loadedIframe(this);');
 //divframeInfo.appendChild(ifElem);
 initPage();
-	alert("loaded2");
+
 menuList.addEventListener("animationend", updateAnimation, true);
 loadMetsXML();
 //alert(performance.navigation.type);
@@ -753,7 +753,7 @@ return true;
 <div id="objClip">
 
 <div id="divVideo" >
-
+<video id="video"></video>
 <div id="resPhoto" ondrop="CIdrop(event)" ondragover="CIallowDrop(event)"><canvas id="canvas" ></canvas>
 <div id="trimDiv" draggable="true" ondragstart="CIdrag(event)"></div>
 </div>
