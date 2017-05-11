@@ -102,12 +102,16 @@ padding-left: 2px;
 	border: buttonhighlight 2px outset;
 }
 
-#butFile, #butTrim, #butTest{
+#butFile, #butTrim, #butCallFile, #butTest, #canvas2{
 display: none;
 }
 
 .butContent{
 	display: inline;
+}
+
+#imgObj{
+float: right;
 }
 
 #mailTXT{
