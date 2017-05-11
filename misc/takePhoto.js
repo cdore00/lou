@@ -77,6 +77,7 @@ if (navigator.getMedia){
         vendorURL = window.URL || window.webkitURL;
         video.src = vendorURL.createObjectURL(stream);
       }
+	video.style.visibility = visible;
       video.play();
 	  objModal.style.visibility="visible";
 	butCancel.addEventListener('click', function(ev){
@@ -110,7 +111,6 @@ if (navigator.getMedia){
 // End stream video
 	
 	function setNoVideo(){
-		video.parentNode.removeChild(video);
 		resPhoto.style.display="inherit";
 		butRetry.style.display="none";
 		butCallFile.style.display="inline";
