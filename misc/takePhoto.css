@@ -27,6 +27,10 @@ position: relative;
 /*width: 100%;*/
 }
 
+#video{
+visibility: hidden;
+}
+
 #resPhoto{
 position: absolute;
 top: 0px;
