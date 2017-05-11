@@ -41,13 +41,13 @@ var vendorURL;
   var streaming = false,
       objModal     = document.querySelector('#objModal'),
 	  objClip      = document.querySelector('#objClip'),
-	  toolDiv       = document.querySelector('#toolDiv'),
+	  toolDiv      = document.querySelector('#toolDiv'),
 	  divVideo     = document.querySelector('#divVideo'),
 	  video        = document.querySelector('#video'),
       canvas       = document.querySelector('#canvas'),
       resPhoto     = document.querySelector('#resPhoto'),
 	  trimDiv      = document.querySelector('#trimDiv'),
-	  buttonZone   = document.querySelector('#buttonZone'),
+	  //buttonZone   = document.querySelector('#buttonZone'),
 	  butRetry     = document.querySelector('#butRetry'),
 	  butOk        = document.querySelector('#butOk'),
 	  butCancel    = document.querySelector('#butCancel'),
@@ -55,10 +55,7 @@ var vendorURL;
 	  butCallFile  = document.querySelector('#butCallFile'),
       width = getWidth(),
       height = 0;
-
-	  //canvas2 = document.getElementById('canvas2');
 	var ctx;
-//	= canvas2.getContext("2d");
 
 // Stream video
   navigator.getMedia = ( navigator.getUserMedia ||
@@ -80,25 +77,19 @@ if (navigator.getMedia){
         vendorURL = window.URL || window.webkitURL;
         video.src = vendorURL.createObjectURL(stream);
       }
-	  video.style.visibility="visible";
+	video.style.visibility = visible;
       video.play();
-	objModal.style.visibility="visible";
+	  objModal.style.visibility="visible";
 	butCancel.addEventListener('click', function(ev){
 		stopStream(stream);
 		objModal.style.visibility="hidden";
 		trimDiv.style.visibility="hidden";
-		video.style.visibility="hidden";
 		ev.preventDefault();
 	}, false);
     },
     function(err) {   // Video not available
 	//alert("Erreur getMedia");
-		resPhoto.style.display="inherit";
-		butRetry.style.display="none";
-		butCallFile.style.display="inline";
-		butFile.onchange = readImage;
-		ctx = canvas.getContext("2d");
-		buttonZone.style.display="inherit";
+		setNoVideo();
       console.log("An error occured! " + err);
 	  butCancel.addEventListener('click', function(ev){
 		objModal.style.visibility="hidden";
@@ -107,27 +98,31 @@ if (navigator.getMedia){
 	  }, false);
     }
   );
-}else{ //No media availaible
+}else{ //No media available
 //alert("No getMedia");
-	  divVideo.style.height = getWidth()  + "px";
-		resPhoto.style.display="inherit";
-		resPhoto.style.height = getWidth()  + "px"; 
-		butRetry.style.display="none";
-		video.style.display="none";
-		butCallFile.style.display="inline";
-		butFile.onchange = readImage;
-		var ctx = canvas.getContext("2d");
-		buttonZone.style.display="inherit";
+		setNoVideo();
 	  butCancel.addEventListener('click', function(ev){
+		  trimDiv.style.visibility="hidden";
 		objModal.style.visibility="hidden";
+		
 		ev.preventDefault();
 	  }, false);
 }
 // End stream video
-
-	divVideo.style.width = getWidth()  + "px";
-	objClip.style.width = getWidth()  + "px";
-	objClip.style.left = (((objModal.offsetWidth - getWidth()) / 2) - 5) + "px";
+	
+	function setNoVideo(){
+		resPhoto.style.display="inherit";
+		butRetry.style.display="none";
+		butCallFile.style.display="inline";
+		butFile.onchange = readImage;
+		ctx = canvas.getContext("2d");
+		objModal.style.visibility="visible";
+	}
+	
+	canvas.width = width;
+	divVideo.style.width = width + "px";
+	objClip.style.width = width + "px";
+	objClip.style.left = (((objModal.offsetWidth - width) / 2) - 5) + "px";
 
     video.addEventListener('canplay', function(ev){
     if (!streaming) {
@@ -143,17 +138,17 @@ if (navigator.getMedia){
 
 
   function takepicture() {
-	var buttonZone = document.getElementById('buttonZone');
+	//var buttonZone = document.getElementById('buttonZone');
 	var toolDiv = document.getElementById('toolDiv');
-	//var butTrim = document.getElementById('butTrim');
+	var butTrim = document.getElementById('butTrim');
     canvas.width = width;
     canvas.height = height;
     canvas.getContext('2d').drawImage(video, 0, 0, width, height);
     data = canvas.toDataURL('image/png');
 	setimgData(data);
 	toolDiv.style.display="inherit";
-	buttonZone.style.display="inherit";
-	//butTrim.style.display="none";
+	//buttonZone.style.display="inherit";
+	butTrim.style.display="none";
 	tipTxt.innerHTML = txtRP;
 	tipTxt.title = txtRP;
   }
@@ -174,19 +169,26 @@ if (navigator.getMedia){
 
   
 function readImage() {
-	var buttonZone = document.getElementById('buttonZone');
-	var toolDiv = document.getElementById('toolDiv');
+var imgObj = document.getElementById('imgObj')
     if ( this.files && this.files[0] ) {
+		ctx.clearRect(0,0,canvas.width, canvas.height);
         var FR= new FileReader();
         FR.onload = function(e) {
            var img = new Image();
            img.src = e.target.result;
            img.onload = function() {
 			height = width * img.height / img.width;
+			imgObj.src = img.src;
+			//divVideo.style.height = height + "px";
+			//resPhoto.style.height = height + "px";
+			//canvas.width = width;
+			canvas.height = height;
+			divVideo.style.height = height + "px";
+			objClip.style.height = height + "px";
             ctx.drawImage(img, 0, 0, width, height);
 			setimgData(canvas.toDataURL('image/png'));
 			toolDiv.style.display="inherit";
-			buttonZone.style.display="inherit";
+			//buttonZone.style.display="inherit";
 			tipTxt.innerHTML = txtRP;
 			tipTxt.title = txtRP;
            };
@@ -262,8 +264,6 @@ var objDrag;
 
 function CIallowDrop(ev) {
     ev.preventDefault();
-		txtX.value = ev.clientX
-		txtY.value = ev.clientY	
 		return false
 }
 
@@ -290,16 +290,17 @@ var parentDiv = document.getElementById('zoneDiv');
 }
 
 function showTrimTool(){
+var resPhoto = document.getElementById('resPhoto');
 var trimDiv = document.getElementById('trimDiv');
 var butTrim = document.getElementById('butTrim');
+if (trimDiv.offsetHeight > resPhoto.offsetHeight * .9){
+	trimDiv.style.height = (resPhoto.offsetHeight * .9) + "px"; 
+	trimDiv.style.width = (resPhoto.offsetHeight * .9) + "px"; 
+	}
 butTrim.style.display = "inherit";
 trimDiv.style.left = (((objClip.offsetWidth - trimDiv.offsetWidth) / 2) ) + "px";
 trimDiv.style.top = (((objClip.offsetHeight - trimDiv.offsetHeight) / 3) ) + "px";
 trimDiv.style.visibility = "visible";
-//butTrim.setAttribute('class', "show");
-
-//butTrim.className="show";
-
 }
 
 function trimImg(){
