@@ -43,6 +43,7 @@ background: black;
 }
 
 #video{
+opacity: 1;
 visibility: hidden;
 cursor: pointer;
 }
@@ -100,7 +101,9 @@ padding-left: 2px;
 #buttonZone button{
     width: 32%;
     padding: inherit !important;
-	border: buttonhighlight 2px outset;
+    border: buttonhighlight 2px outset;
+    font-size: 0.8em;
+    font-weight: bold;
 }
 
 #butFile, #butTrim, #butCallFile, #butTest, #canvas2{
