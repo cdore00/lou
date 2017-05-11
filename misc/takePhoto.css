@@ -11,7 +11,7 @@ z-index: 10000;
 }
 
 #objClip{
-opacity: 1;
+
 background: #fff;
 opacity: 1;
 position: absolute;
@@ -25,10 +25,6 @@ z-index: 10000;
 #divVideo{
 position: relative;
 /*width: 100%;*/
-}
-
-#video{
-visibility: hidden;
 }
 
 #resPhoto{
