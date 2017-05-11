@@ -31,9 +31,8 @@ var cartCnt = 0;
 var progressBar;
 var commandeEnvoye = false;
 var updtInfo = null;
-var nodejsHost = "https://googserv4-goog-server.1d35.starter-us-east-1.openshiftapps.com/";
-// "https://googserv4-goog-server.1d35.starter-us-east-1.openshiftapps.com/";
-//OLD"https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
+var nodejsHost = "http://192.168.2.10:3000/nod/";
+//"https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
 //"http://192.168.2.10:3000/nod/";
 //"http://cdore.no-ip.biz:3000/nod/";
 function loadMetsXML(){
@@ -414,21 +413,25 @@ if (checkInfo()){
 		}
 	if (updtInfo)
 		rangeInfo = "&range=" + updtInfo;
-	
-	strCom = nodejsHost + "app.js?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
 
-	//strCom = getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
-	//parseQuery(strCom);
-	//SubXHR(strCom);
-var ifElem = document.createElement("iframe");
-ifElem.setAttribute('id', 'frameInfo');	
-ifElem.setAttribute('src', strCom);
-//ifElem.setAttribute('sandbox', 'allow-same-origin');
-ifElem.setAttribute('seamless', true);
-ifElem.setAttribute('onload','loadedIframe(this);');
-divframeInfo.appendChild(ifElem);
-ifElem.style.display = "inherit";
-	//frameInfo.src = strCom;
+	if (imgData == null)
+		strCom = nodejsHost + "app.js?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
+	else{
+		strCom = nodejsHost + "commPic?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
+		//parseQuery(strCom);
+		SubXHR(strCom);
+		}
+	var ifElem = document.createElement("iframe");
+	ifElem.setAttribute('id', 'frameInfo');	
+	if (imgData == null)
+		ifElem.setAttribute('src', strCom);
+	else
+		ifElem.setAttribute('src', nodejsHost + "getRow?range='Feuille 1'!A1:A1");
+	//ifElem.setAttribute('sandbox', 'allow-same-origin');
+	ifElem.setAttribute('seamless', true);
+	ifElem.setAttribute('onload','loadedIframe(this);');
+	divframeInfo.appendChild(ifElem);
+	ifElem.style.display = "inherit";
 	return true;
 }else{
 	return false;
@@ -447,33 +450,26 @@ var arr = JSON.parse(str);
 }
 
 function SubXHR(strComInfo){
-xhr = getXMLHttpRequest();
-
-	var strCom = "http://192.168.2.10:3000/nod/sendImage?" ;
+var xhr = getXMLHttpRequest();
+	//var strCom = "http://192.168.2.10:3000/nod/sendImage?" ;
 	var fd = new FormData();
 	fd.append("mailInfo", "cdore00@yahoo.ca");
 	fd.append("queryInfo", strComInfo);
 	fd.append("imgfile", imgData);
-
-	
-var strCom = "https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send&response_type=code&client_id=425059252383-7ir1gosfrn60o59b3uvp8du7ehctlmdn.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fcdore00.github.io%2F";
 	
   xhr.onloadend = function() {
     var text = xhr.responseText;
+	var frameInfo = document.getElementById('frameInfo');
 	var subComm = document.getElementById('subComm');
+	frameInfo.style.display="none";
 	subComm.innerHTML = text;
 	subComm.style.webkitAnimationPlayState = "running";
     //alert('Response from CORS request to : ' + text);
   };
-	//xhr.open("POST", strCom);
-xhr.open("GET", strCom);
-	//xhr.setRequestHeader('Access-Control-Allow-Headers' , 'Origin');
-	//xhr.setRequestHeader("Content-Type", "text/plain");
-	//xhr.setRequestHeader("Origin", "https://cdore00.github.io");
-	xhr.setRequestHeader("Access-Control-Allow-Origin", "https://cdore00.github.io");
-//xhr.setRequestHeader("Content-Type", "multipart/form-data");
-//xhr.send(fd);	
-		xhr.send();	
+	xhr.open("POST", strComInfo);
+	//xhr.setRequestHeader("Access-Control-Allow-Origin", "http://cdore.no-ip.biz");
+	xhr.setRequestHeader("Content-Type", "multipart/form-data");
+	xhr.send(fd);		
 }
 
 function loadedIframe(objIframe){
@@ -509,7 +505,6 @@ if (typeof HTMLDialogElement !== 'function') {
 //ifElem.setAttribute('onload','loadedIframe(this);');
 //divframeInfo.appendChild(ifElem);
 initPage();
-
 menuList.addEventListener("animationend", updateAnimation, true);
 loadMetsXML();
 //alert(performance.navigation.type);
@@ -602,7 +597,6 @@ return false;
 }
 return true;
 }
-	
 // -->
 </script> 
 </head>
@@ -776,5 +770,6 @@ return true;
 <canvas id="canvas2" ></canvas>
 <img id="imgObj" src="#" style="display: block;"/>
 </div>
+
  </body>	 
 </html>
