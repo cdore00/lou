@@ -25,14 +25,8 @@ var txtRP = "< Rogner&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8
 
 
 function initCamImgCapture(){
-mailTXT = document.getElementById('mailTXT');
 tipTxt = document.getElementById('tipTxt');
 
-if (supportStorage){
-var eMailAdress = localStorage.getItem("eMailAdress");
-if (eMailAdress)
-	mailTXT.value = eMailAdress;
-}
 
 (function() {
 
@@ -77,13 +71,14 @@ if (navigator.getMedia){
         vendorURL = window.URL || window.webkitURL;
         video.src = vendorURL.createObjectURL(stream);
       }
-	video.style.visibility = "visible";
       video.play();
+	  video.style.visibility = "visible";
 	  objModal.style.visibility="visible";
+	  objClip.style.display="inherit";
+	  butCallFile.style.display="none";
 	butCancel.addEventListener('click', function(ev){
 		stopStream(stream);
-		objModal.style.visibility="hidden";
-		trimDiv.style.visibility="hidden";
+		quitPhoto();
 		ev.preventDefault();
 	}, false);
     },
@@ -92,8 +87,7 @@ if (navigator.getMedia){
 		setNoVideo();
       console.log("An error occured! " + err);
 	  butCancel.addEventListener('click', function(ev){
-		objModal.style.visibility="hidden";
-		trimDiv.style.visibility="hidden";
+		quitPhoto();
 		ev.preventDefault();
 	  }, false);
     }
@@ -102,13 +96,18 @@ if (navigator.getMedia){
 //alert("No getMedia");
 		setNoVideo();
 	  butCancel.addEventListener('click', function(ev){
-		  trimDiv.style.visibility="hidden";
-		objModal.style.visibility="hidden";
-		
+		  quitPhoto();
 		ev.preventDefault();
 	  }, false);
 }
 // End stream video
+	
+	function quitPhoto(){
+		video.style.visibility = "hidden";
+		trimDiv.style.visibility="hidden";
+		objModal.style.visibility="hidden";
+		objClip.style.display="none";
+	}
 	
 	function setNoVideo(){
 		resPhoto.style.display="inherit";
@@ -117,12 +116,14 @@ if (navigator.getMedia){
 		butFile.onchange = readImage;
 		ctx = canvas.getContext("2d");
 		objModal.style.visibility="visible";
+		objClip.style.display="inherit";
 	}
 	
 	canvas.width = width;
 	divVideo.style.width = width + "px";
 	objClip.style.width = width + "px";
 	objClip.style.left = (((objModal.offsetWidth - width) / 2) - 5) + "px";
+
 
     video.addEventListener('canplay', function(ev){
     if (!streaming) {
@@ -162,8 +163,8 @@ if (navigator.getMedia){
   butOk.addEventListener('click', function(ev){
     if (imgData == null)
 		takepicture();
-    if (capture(data))
-		butCancel.click();
+
+	butCancel.click();
     ev.preventDefault();
   }, false);
 
@@ -218,41 +219,6 @@ if (stream){
 	}
 }
 
-function capture(data){
-var eMailAdress = mailTXT.value;
-if (eMailAdress && eMailAdress != ""){
-	if (supportStorage)
-		localStorage.setItem("eMailAdress", eMailAdress);
-}else{
-	alert("S.v.p. saisir une adresse courriel.");
-	mailTXT.focus();
-	return false;
-}
-//alert(data);
-sendServ(eMailAdress, imgData);
-return true;
-}
-
-function sendServ(eMailAdress, data){
-var urlInfo = document.location.href;
-if (urlInfo.indexOf("192.168.2.10") != -1)
-	nodejsHost = "http://192.168.2.10:3000/nod/";
-
-	var strCom = nodejsHost + "sendImage?" ;
-	var fd = new FormData();
-	fd.append("mailInfo", eMailAdress);
-	fd.append("testInfo", "test");
-	fd.append("afile", data);
-
-var xhr = new XMLHttpRequest(); 
-  xhr.onloadend = function() {
-    var text = xhr.responseText;
-    //alert('Response from CORS request to : ' + text);
-  };
-	xhr.open("POST", strCom);
-	xhr.setRequestHeader("Content-Type", "multipart/form-data");
-	xhr.send(fd);	
-}
 
 function setimgData(data){
 var imgObj = document.getElementById('imgObj');
