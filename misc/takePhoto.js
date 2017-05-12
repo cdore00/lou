@@ -77,7 +77,7 @@ if (navigator.getMedia){
         vendorURL = window.URL || window.webkitURL;
         video.src = vendorURL.createObjectURL(stream);
       }
-	video.style.visibility = visible;
+	video.style.visibility = "visible";
       video.play();
 	  objModal.style.visibility="visible";
 	butCancel.addEventListener('click', function(ev){
