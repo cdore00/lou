@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -31,10 +31,12 @@ var cartCnt = 0;
 var progressBar;
 var commandeEnvoye = false;
 var updtInfo = null;
-var nodejsHost = 'https://googserv4-goog-server.1d35.starter-us-east-1.openshiftapps.com/';
-//"https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
+var nodejsHost = "https://googserv4-goog-server.1d35.starter-us-east-1.openshiftapps.com/";
+//"https://googserv4-goog-server.1d35.starter-us-east-1.openshiftapps.com/";
 //"http://192.168.2.10:3000/nod/";
 //"http://cdore.no-ip.biz:3000/nod/";
+
+
 function loadMetsXML(){
 var divProgress = document.getElementById("divProgress");
 progressBar = document.getElementById("progress");
@@ -414,16 +416,18 @@ if (checkInfo()){
 	if (updtInfo)
 		rangeInfo = "&range=" + updtInfo;
 
-	if (imgData == null)
+	if (CIimgData == null)
 		strCom = nodejsHost + "app.js?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
 	else{
 		strCom = nodejsHost + "commPic?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
 		//parseQuery(strCom);
-		SubXHR(strCom);
+		setTimeout(function() {
+			SubXHR(strCom)
+		}, 1000);
 		}
 	var ifElem = document.createElement("iframe");
 	ifElem.setAttribute('id', 'frameInfo');	
-	if (imgData == null)
+	if (CIimgData == null)
 		ifElem.setAttribute('src', strCom);
 	else
 		ifElem.setAttribute('src', nodejsHost + "getRow?range='Feuille 1'!A1:A1");
@@ -450,12 +454,11 @@ var arr = JSON.parse(str);
 }
 
 function SubXHR(strComInfo){
-var xhr = getXMLHttpRequest();
-	//var strCom = "http://192.168.2.10:3000/nod/sendImage?" ;
+	var xhr = getXMLHttpRequest();
 	var fd = new FormData();
 	fd.append("mailInfo", "cdore00@yahoo.ca");
 	fd.append("queryInfo", strComInfo);
-	fd.append("imgfile", imgData);
+	fd.append("imgfile", CIimgData);
 	
   xhr.onloadend = function() {
     var text = xhr.responseText;
@@ -499,11 +502,7 @@ if (urlInfo.indexOf("rang=") != -1){  // Modifier une commande
 if (typeof HTMLDialogElement !== 'function') {
 		dialogBox.style.visibility="hidden";
 	} 
-//var ifElem = document.createElement("iframe");
-//ifElem.setAttribute('id', 'frameInfo');	
-//ifElem.setAttribute('src', 'vide.html');
-//ifElem.setAttribute('onload','loadedIframe(this);');
-//divframeInfo.appendChild(ifElem);
+
 initPage();
 menuList.addEventListener("animationend", updateAnimation, true);
 loadMetsXML();
@@ -706,6 +705,7 @@ return true;
 </form>
 <div id="cart-content">
 <ul>
+<img id="imgObj" src="#" style="display: block;"/>
 	<li>
 		<span id="cartliv1" class="titreMenu">Livraison de lundi:</span>
 		<div class="itemDesc itemDescCart">
@@ -744,7 +744,6 @@ return true;
 <!--Take photo elements // -->
 <div id="objModal">
 <canvas id="canvas2" ></canvas>
-<img id="imgObj" src="#" style="display: block;"/>
 </div>
 
 <div id="objClip">
@@ -753,9 +752,10 @@ return true;
 <video id="video"></video>
 <div id="resPhoto" ondrop="CIdrop(event)" ondragover="CIallowDrop(event)"><canvas id="canvas" ></canvas>
 <div id="trimDiv" draggable="true" ondragstart="CIdrag(event)"></div>
+<div id="redim" draggable="true" ondragstart="CIdrag(event)"></div>
 </div>
 <div id="tipDiv"><span id="tipTxt" title="Cliquer pour photo">Cliquer pour photo</span>
-<div id="toolDiv"><span id="trimImg"><img src="trim.png" onclick="showTrimTool()"/></span><span id="rotateImg"><img src="rotate90.png" onclick="rotateImg();"/></span></div>
+<div id="toolDiv"><div id="trimImg" onclick="showTrimTool()"></div><div id="rotateImg" onclick="rotateImg();"></div></div>
 </div>
 </div>
 
@@ -764,7 +764,6 @@ return true;
 <div class="butContent"><button id="butCallFile" onclick="butFile.click()">Photo</button></div>
 <div class="butContent"><button id="butOk">Ok</button></div>
 <div class="butContent"><button id="butCancel">Annuler</button></div>
-<div class="butContent"><button id="butTrim" onclick="trimImg()">Rogner</button></div>
 <div class="butContent"><button id="butTest" onclick="test()">Test</button></div>
 <input id="butFile" type="file" accept="image/*;capture=camera" />
 </div>
