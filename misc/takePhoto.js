@@ -281,7 +281,7 @@ function redimTrimObj(evX, evY){
 	var objClip = document.getElementById('objClip');
 	var cX = evX - objClip.offsetLeft;
 	var cY = evY - objClip.offsetTop;
-	infoTXT.value = (evX + " redim Y = " + evY + "  cX= " + cX + " cY=" + cY);	
+	//infoTXT.value = (evX + " redim Y = " + evY + "  cX= " + cX + " cY=" + cY);	
 	if (trimDiv.offsetTop > evY)
 		var oHeight = trimDiv.offsetHeight + (trimDiv.offsetTop - cY);
 	else
