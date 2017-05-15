@@ -1,55 +1,50 @@
 <!--
-var supportStorage = (function() {  // Detect localStorage availability for Quiz history, Quiz templates (Custom Quiz) and Overall analysis 
-	try {
-		var mod = "test";
-		localStorage.setItem(mod, mod);
-		localStorage.removeItem(mod);
-		return true;
-	} catch (exception) {
-		return false;
-	}
-}());
 
-var nodejsHost = "http://cdore.no-ip.biz:3000/nod/";
-//"https://sslgserver-googleserv.44fs.preview.openshiftapps.com/";
-//"http://192.168.2.10:3000/nod/";
-//"http://cdore.no-ip.biz:3000/nod/";
+var CIimgData;
 
 function getWidth(){
 return 300;
 }
 
-var imgData;
-var txtTP = "Cliquer pour photo";
-var txtRP = "< Rogner&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;Pivoter >";
+function setimgData(data){
+var imgObj = document.getElementById('imgObj');
+if (data == null)
+	imgObj.style.visibility="hidden";
+else
+	imgObj.style.visibility="visible";
 
+CIimgData = data;
+imgObj.src = CIimgData;
+}
 
-function initCamImgCapture(){
+function initCamImgCapture(){  // Start image capture object initialisation
 tipTxt = document.getElementById('tipTxt');
 
 
 (function() {
 
 var data = null;
-var vendorURL;
+
   var streaming = false,
-      objModal     = document.querySelector('#objModal'),
-	  objClip      = document.querySelector('#objClip'),
-	  toolDiv      = document.querySelector('#toolDiv'),
-	  divVideo     = document.querySelector('#divVideo'),
-	  video        = document.querySelector('#video'),
-      canvas       = document.querySelector('#canvas'),
-      resPhoto     = document.querySelector('#resPhoto'),
-	  trimDiv      = document.querySelector('#trimDiv'),
-	  //buttonZone   = document.querySelector('#buttonZone'),
-	  butRetry     = document.querySelector('#butRetry'),
-	  butOk        = document.querySelector('#butOk'),
-	  butCancel    = document.querySelector('#butCancel'),
-	  butFile      = document.querySelector('#butFile'),
-	  butCallFile  = document.querySelector('#butCallFile'),
+      objModal     = document.getElementById('objModal'),
+	  objClip      = document.getElementById('objClip'),
+	  toolDiv      = document.getElementById('toolDiv'),
+	  divVideo     = document.getElementById('divVideo'),
+	  video        = document.getElementById('video'),
+      canvas       = document.getElementById('canvas'),
+      resPhoto     = document.getElementById('resPhoto'),
+	  trimDiv      = document.getElementById('trimDiv'),
+	  //buttonZone   = document.getElementById('buttonZone'),
+	  butRetry     = document.getElementById('butRetry'),
+	  butOk        = document.getElementById('butOk'),
+	  butCancel    = document.getElementById('butCancel'),
+	  butFile      = document.getElementById('butFile'),
+	  butCallFile  = document.getElementById('butCallFile'),
       width = getWidth(),
-      height = 0;
-	var ctx;
+      height = 0,
+	  txtTP = "Cliquer pour photo",
+      txtRP = "< Rogner&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;&#8239;Pivoter >",
+	  ctx;
 
 // Stream video
   navigator.getMedia = ( navigator.getUserMedia ||
@@ -68,14 +63,12 @@ if (navigator.getMedia){
       if (navigator.mozGetUserMedia) {
         video.mozSrcObject = stream;
       } else {
-        vendorURL = window.URL || window.webkitURL;
+        var vendorURL = window.URL || window.webkitURL;
         video.src = vendorURL.createObjectURL(stream);
       }
       video.play();
 	  video.style.visibility = "visible";
 	  objModal.style.visibility="visible";
-	  objClip.style.display="inherit";
-	  butCallFile.style.display="none";
 	butCancel.addEventListener('click', function(ev){
 		stopStream(stream);
 		quitPhoto();
@@ -102,8 +95,33 @@ if (navigator.getMedia){
 }
 // End stream video
 	
+  video.addEventListener('click', function(ev){
+	resPhoto.style.display="inherit";
+      takepicture();
+    ev.preventDefault();
+  }, false);
+
+  butOk.addEventListener('click', function(ev){
+    if (CIimgData == null)
+		takepicture();
+	if (trimDiv.style.visibility == "visible")
+		trimImg();
+		
+	butCancel.click();
+    ev.preventDefault();
+  }, false);
+
+  butRetry.addEventListener('click', function(ev){
+	resPhoto.style.display="none";
+	tipTxt.innerHTML = txtTP;
+	tipTxt.title = txtTP;
+	setimgData(null);
+  }, false);
+  
+  
 	function quitPhoto(){
 		video.style.visibility = "hidden";
+		redim.style.visibility = "hidden";
 		trimDiv.style.visibility="hidden";
 		objModal.style.visibility="hidden";
 		objClip.style.display="none";
@@ -133,40 +151,27 @@ if (navigator.getMedia){
       video.setAttribute('height', height);
       canvas.setAttribute('width', width);
       canvas.setAttribute('height', height);
+	  resPhoto.style.display="none";
+	  objClip.style.display="inherit";
+	  butCallFile.style.display="none";
+	  toolDiv.style.display="none";
+	  tipTxt.innerHTML = txtTP;
+	  tipTxt.title = txtTP;
       streaming = true;
     }
   }, false);
 
 
-  function takepicture() {
-	//var buttonZone = document.getElementById('buttonZone');
-	var toolDiv = document.getElementById('toolDiv');
-	var butTrim = document.getElementById('butTrim');
-    canvas.width = width;
-    canvas.height = height;
-    canvas.getContext('2d').drawImage(video, 0, 0, width, height);
-    data = canvas.toDataURL('image/png');
+function takepicture() {
+	canvas.width = width;
+	canvas.height = height;
+	canvas.getContext('2d').drawImage(video, 0, 0, width, height);
+	data = canvas.toDataURL('image/png');
 	setimgData(data);
 	toolDiv.style.display="inherit";
-	//buttonZone.style.display="inherit";
-	butTrim.style.display="none";
 	tipTxt.innerHTML = txtRP;
 	tipTxt.title = txtRP;
-  }
-
-  video.addEventListener('click', function(ev){
-	resPhoto.style.display="inherit";
-      takepicture();
-    ev.preventDefault();
-  }, false);
-
-  butOk.addEventListener('click', function(ev){
-    if (imgData == null)
-		takepicture();
-
-	butCancel.click();
-    ev.preventDefault();
-  }, false);
+}
 
   
 function readImage() {
@@ -197,19 +202,6 @@ var imgObj = document.getElementById('imgObj')
         FR.readAsDataURL( this.files[0] );
     }
 }
-  
-})();
-
-}
-// END initCamImgCapture
-
-function retryCapture(){
-var resPhoto = document.getElementById('resPhoto')
-	resPhoto.style.display="none";
-	tipTxt.innerHTML = txtTP;
-	tipTxt.title = txtTP;
-	imgData = null;
-  }
 
 function stopStream(stream) {
 if (stream){
@@ -219,85 +211,172 @@ if (stream){
 	}
 }
 
-
-function setimgData(data){
-var imgObj = document.getElementById('imgObj');
-imgData = data;
-imgObj.src = imgData;
-}
-
-var objDrag;
-
-function CIallowDrop(ev) {
-    ev.preventDefault();
-		return false
-}
-
-function CIdrag(ev) {
-
-	objDrag = ev.target;
-    ev.dataTransfer.setData("text", ev.target.id);
-	ev.dataTransfer.setData("clicLeft", ev.clientX - objDrag.offsetLeft);
-	ev.dataTransfer.setData("clicTop", ev.clientY - objDrag.offsetTop  );
-	
-	var x=1;
-}
-
-function CIdrop(ev) {
-var parentDiv = document.getElementById('zoneDiv');
-
-    ev.preventDefault();
-    var clicLeft = ev.dataTransfer.getData("clicLeft");
-	var clicTop = ev.dataTransfer.getData("clicTop");
-    //ev.target.appendChild(document.getElementById(data));
-		objDrag.style.left = ev.clientX  - clicLeft + "px";;
-		objDrag.style.top = ev.clientY  - clicTop + "px";
-			var x=1;
-}
-
-function showTrimTool(){
-var resPhoto = document.getElementById('resPhoto');
-var trimDiv = document.getElementById('trimDiv');
-var butTrim = document.getElementById('butTrim');
-if (trimDiv.offsetHeight > resPhoto.offsetHeight * .9){
-	trimDiv.style.height = (resPhoto.offsetHeight * .9) + "px"; 
-	trimDiv.style.width = (resPhoto.offsetHeight * .9) + "px"; 
-	}
-butTrim.style.display = "inherit";
-trimDiv.style.left = (((objClip.offsetWidth - trimDiv.offsetWidth) / 2) ) + "px";
-trimDiv.style.top = (((objClip.offsetHeight - trimDiv.offsetHeight) / 3) ) + "px";
-trimDiv.style.visibility = "visible";
-}
-
 function trimImg(){
-trimDiv = document.getElementById('trimDiv');
-canvas = document.getElementById('canvas');
-
 var actImg = new Image();
-actImg.src = imgData;
+actImg.src = CIimgData;
 
 canvas2 = document.getElementById('canvas2');
 canvas2.width = trimDiv.offsetWidth;
 canvas2.height = trimDiv.offsetHeight;
 ctx = canvas2.getContext("2d");
 
-var x = trimDiv.offsetLeft + 3;
-var y = trimDiv.offsetTop + 3;
-var w = trimDiv.offsetWidth - 5;
-var h = trimDiv.offsetHeight - 5;
+var x = trimDiv.offsetLeft ;
+var y = trimDiv.offsetTop ;
+var w = trimDiv.offsetWidth ;
+var h = trimDiv.offsetHeight ;
 ctx.drawImage(actImg,x,y,w,h,0,0,w,h);
 
 setimgData(canvas2.toDataURL('image/png'));
 }
+  
+})();  // End anonyme function
+
+}
+// END initCamImgCapture
+
+
+
+
+var objDrag;
+
+function CIallowDrop(ev) {
+    ev.preventDefault();
+
+		return false
+}
+
+
+function CIdrag(ev) {
+	objDrag = ev.target;
+    ev.dataTransfer.setData("id", ev.target.id);
+	CIoffSetX = ev.clientX - objDrag.offsetLeft;
+	CIoffSetY = ev.clientY - objDrag.offsetTop;
+}
+
+function CIdrop(ev) {
+	ev.preventDefault();
+	if (ev.dataTransfer.getData("id") == "redim"){
+		redimTrimObj(ev.clientX, ev.clientY);
+	}
+	objDrag.style.left = ev.clientX - CIoffSetX + "px";
+	objDrag.style.top =  ev.clientY - CIoffSetY + "px";	
+	CIvalidPos();
+}
+
+function CIposObjs(){
+var trimDiv = document.getElementById('trimDiv');
+var redim = document.getElementById('redim');
+	if (objDrag.id == "trimDiv"){
+		redim.style.left = (trimDiv.offsetLeft - 9) + "px";
+		redim.style.top = (trimDiv.offsetTop - 9) + "px";
+	}else{
+		trimDiv.style.left = (redim.offsetLeft + 9) + "px";
+		trimDiv.style.top = (redim.offsetTop + 9) + "px";		
+	}
+}
+
+function redimTrimObj(evX, evY){
+	var infoTXT = document.getElementById('infoTXT');
+	var trimDiv = document.getElementById('trimDiv')
+	var objClip = document.getElementById('objClip');
+	var cX = evX - objClip.offsetLeft;
+	var cY = evY - objClip.offsetTop;
+	infoTXT.value = (evX + " redim Y = " + evY + "  cX= " + cX + " cY=" + cY);	
+	if (trimDiv.offsetTop > evY)
+		var oHeight = trimDiv.offsetHeight + (trimDiv.offsetTop - cY);
+	else
+		var oHeight = trimDiv.offsetHeight - (cY - trimDiv.offsetTop);
+	if (trimDiv.offsetLeft > cX)
+		var oWidth = trimDiv.offsetWidth + (trimDiv.offsetLeft - cX);
+	else
+		var oWidth = trimDiv.offsetWidth - (cX - trimDiv.offsetLeft);
+	//alert(oWidth + " oHeight=" + oHeight);	
+	trimDiv.style.width = (oWidth ) + "px";
+	trimDiv.style.height = (oHeight) + "px";	
+}
+
+// Drag & drop with touch event for mobil
+
+var CIoffSetX = 0;
+var CIoffSetY = 0;
+function CIstartTouch(event) {
+	objDrag = event.target;
+	var touch = event.targetTouches[0];
+	CIoffSetX = touch.pageX-objDrag.offsetLeft;
+	CIoffSetY = touch.pageY-objDrag.offsetTop;
+	this.addEventListener('touchmove', CImoveTouch, false);
+	this.addEventListener('touchend', CIendTouch, false);
+}
+
+function CIendTouch(event) {   //Drop DIV
+var objClip = document.getElementById('objClip');
+var trimDiv = document.getElementById('trimDiv');
+this.removeEventListener('touchmove', CImoveTouch, false);
+this.removeEventListener('touchend', CIendTouch, false);
+	if (event.target.id == "redim"){
+		redimTrimObj(event.target.offsetLeft+objClip.offsetLeft+9, event.target.offsetTop+objClip.offsetTop+9);
+		trimDiv.style.left = (event.target.offsetLeft + 9) + "px";
+		trimDiv.style.top = (event.target.offsetTop + 9) + "px";	
+	}
+CIvalidPos();
+}
+
+function CIvalidPos(){
+var objClip = document.getElementById('objClip');
+var trimDiv = document.getElementById('trimDiv');
+if (trimDiv.offsetLeft + trimDiv.offsetWidth < 0 || 
+	trimDiv.offsetLeft > objClip.offsetWidth || 
+    trimDiv.offsetTop > objClip.offsetHeight || 
+	trimDiv.offsetTop + trimDiv.offsetHeight < objClip.offsetTop )
+showTrimTool();
+if (trimDiv.offsetLeft < 0)
+	trimDiv.style.left = "0px";
+if (trimDiv.offsetLeft + trimDiv.offsetWidth > objClip.offsetWidth)
+	trimDiv.style.left = (objClip.offsetWidth - trimDiv.offsetWidth - 1) + "px";
+if (trimDiv.offsetTop < 0)
+	trimDiv.style.top = "0px";
+if (trimDiv.offsetTop + trimDiv.offsetHeight > objClip.offsetHeight)
+	trimDiv.style.top = (trimDiv.offsetHeight - 30) + "px";
+CIposObjs();	
+}
+
+function CImoveTouch(event) {
+    var touch = event.targetTouches[0];
+    // Place element where the finger is
+	var obj = event.target;
+
+    obj.style.left = touch.pageX-CIoffSetX + 'px';
+    obj.style.top = touch.pageY-CIoffSetY + 'px';
+	if (obj.id != "redim"){
+		CIposObjs();
+		//redimTrimObj(touch.pageX, touch.pageY);
+	}
+    event.preventDefault();
+}
+
+function showTrimTool(){
+var resPhoto = document.getElementById('resPhoto');
+var trimDiv = document.getElementById('trimDiv');
+var redim = document.getElementById('redim');
+trimDiv.style.width = (resPhoto.offsetHeight / 2) + "px"; 
+trimDiv.style.height = (trimDiv.offsetWidth) + "px";
+if (trimDiv.offsetHeight > resPhoto.offsetHeight * .9){
+	trimDiv.style.height = (resPhoto.offsetHeight * .9) + "px"; 
+	trimDiv.style.width = (resPhoto.offsetHeight * .9) + "px"; 
+	}
+trimDiv.style.left = (((objClip.offsetWidth - trimDiv.offsetWidth) / 2) ) + "px";
+trimDiv.style.top = (((objClip.offsetHeight - trimDiv.offsetHeight) / 3) ) + "px";
+redim.style.left = (trimDiv.offsetLeft - 9) + "px";
+redim.style.top = (trimDiv.offsetTop - 9) + "px";
+trimDiv.addEventListener('touchstart', CIstartTouch, false);  // Drag and drop for mobil
+redim.addEventListener('touchstart', CIstartTouch, false);  // Drag and drop for mobil
+trimDiv.style.visibility = "visible";
+redim.style.visibility = "visible";
+}
 
 function rotateImg(){
 var img = document.getElementById('imgObj');
-var rotateImg = document.getElementById('rotateImg');
-
-//rotateImg .style.display = "none";
-//imgObj.style.transform = "rotate(90deg)";
-
-canvas2 = document.querySelector('#canvas2');
+var canvas2 = document.getElementById('canvas2');
 
 canvas2.width = canvas.width;
 canvas2.height = canvas.height;
@@ -315,14 +394,13 @@ ctx.translate(-canvas.width/2,-canvas.height/2);
 setimgData(canvas2.toDataURL('image/png'));
 //alert(img);
 img.onload = function() {
-	canvas = document.querySelector('#canvas');
+	canvas = document.getElementById('canvas');
 	context = canvas.getContext("2d");
 	context.clearRect(0,0,canvas.width, canvas.height);
 	context.drawImage(img, 0, 0, img.width, img.height);
 };
-img.src = imgData;
-// testing...just draw a rect top-left
-//ctx.fillRect(0,0,25,10);
+img.src = CIimgData;
+
 }
 
 function test(){
