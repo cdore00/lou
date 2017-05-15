@@ -255,7 +255,7 @@ function CIdrag(ev) {
 
 function CIdrop(ev) {
 	ev.preventDefault();
-	if (ev.dataTransfer.getData("id") == "redim"){
+	if (objDrag.id == "redim"){
 		redimTrimObj(ev.clientX, ev.clientY);
 	}
 	objDrag.style.left = ev.clientX - CIoffSetX + "px";
