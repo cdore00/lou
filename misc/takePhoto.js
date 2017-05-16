@@ -112,6 +112,9 @@ if (navigator.getMedia){
   }, false);
 
   butRetry.addEventListener('click', function(ev){
+	var tipDiv = document.getElementById('tipDiv');
+	toolDiv.style.display="none";
+	tipDiv.style.display="inherit";
 	resPhoto.style.display="none";
 	tipTxt.innerHTML = txtTP;
 	tipTxt.title = txtTP;
@@ -358,6 +361,7 @@ function showTrimTool(){
 var resPhoto = document.getElementById('resPhoto');
 var trimDiv = document.getElementById('trimDiv');
 var redim = document.getElementById('redim');
+var tipDiv = document.getElementById('tipDiv');
 trimDiv.style.width = (resPhoto.offsetHeight / 2) + "px"; 
 trimDiv.style.height = (trimDiv.offsetWidth) + "px";
 if (trimDiv.offsetHeight > resPhoto.offsetHeight * .9){
@@ -370,6 +374,7 @@ redim.style.left = (trimDiv.offsetLeft - 9) + "px";
 redim.style.top = (trimDiv.offsetTop - 9) + "px";
 trimDiv.addEventListener('touchstart', CIstartTouch, false);  // Drag and drop for mobil
 redim.addEventListener('touchstart', CIstartTouch, false);  // Drag and drop for mobil
+tipDiv.style.display="none";
 trimDiv.style.visibility = "visible";
 redim.style.visibility = "visible";
 }
