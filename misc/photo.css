@@ -161,7 +161,7 @@ background: #AD8700;
 
 #subComm{
 /*float: inherit;*/
-display: block;
+display: inline-block;
 text-align: left;
 top: 10px;
 left: 10px;
