@@ -3,7 +3,6 @@
 
 <head>
 <!--<meta content="text/html; charset=windows-1252" http-equiv="Content-Type" />-->
-<base target='_parent' />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <meta name="contactcity" content="Quebec"/>
@@ -33,11 +32,21 @@ var progressBar;
 var commandeEnvoye = false;
 var updtInfo = null;
 var nodejsHost = "https://servg4-cd-serv.1d35.starter-us-east-1.openshiftapps.com/";
-	
 //"https://servg4-cd-serv.1d35.starter-us-east-1.openshiftapps.com/";
 //"http://192.168.2.10:3000/nod/";
 //"http://cdore.no-ip.biz:3000/nod/";
+var windowOref = null;
+var pathComm;
 
+function getCode(){
+//
+windowOref = window.open("https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send&response_type=code&client_id=425059252383-7ir1gosfrn60o59b3uvp8du7ehctlmdn.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Fcdore.no-ip.biz%2Fnod%2F",
+  "_blank","width=420,height=230,menubar=no,location=no,resizable=no,scrollbars=no,status=no");
+  
+	setTimeout(function() {
+	sendComm();
+	}, 1000);
+}
 
 function loadMetsXML(){
 var divProgress = document.getElementById("divProgress");
@@ -381,8 +390,6 @@ if (progressBar.value >= 1){
 function submitForm(deleteCommand){
 var cartliv1 = document.getElementById('cartliv1');
 var cartliv3 = document.getElementById('cartliv3');
-//var frameInfo = document.getElementById('frameInfo');
-var divframeInfo = document.getElementById('divframeInfo');
 var cart = cartContent.listeChoix;
 var mailInfoJ1 = "&L1=" + cartliv1.innerHTML;
 var mailInfoJ3 = "&L3=" + cartliv3.innerHTML;
@@ -418,31 +425,44 @@ if (checkInfo()){
 	if (updtInfo)
 		rangeInfo = "&range=" + updtInfo;
 
-	if (CIimgData == null)
-		strCom = nodejsHost + "app.js?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
-	else{
-		strCom = nodejsHost + "commPic?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
-		//parseQuery(strCom);
-		setTimeout(function() {
-			SubXHR(strCom)
-		}, 1000);
-		}
-	var ifElem = document.createElement("iframe");
-	ifElem.setAttribute('id', 'frameInfo');	
-	if (CIimgData == null)
-		ifElem.setAttribute('src', strCom);
-	else
-		ifElem.setAttribute('src', nodejsHost + "getRow?range='Feuille 1'!A1:A1");
-	//ifElem.setAttribute('sandbox', 'allow-same-origin');
-	ifElem.setAttribute('seamless', true);
-	ifElem.setAttribute('onload','loadedIframe(this);');
-	divframeInfo.appendChild(ifElem);
-	ifElem.style.display = "inherit";
+	if (CIimgData == null){
+		pathComm = nodejsHost + "app.js?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
+		//SubGetXHR(strCom);
+	}else{
+		pathComm = nodejsHost + "commPic?" + getInfo(true) + strCom + rangeInfo + mailInfoJ1 + mailInfoJ3 ;
+	}
+	checkToken();
 	return true;
 }else{
 	return false;
 }
 }
+
+function sendComm(){
+var divframeInfo = document.getElementById('divframeInfo');
+
+if (windowOref != null)
+	windowOref.close();
+	
+	if (CIimgData == null){
+		var ifElem = document.createElement("iframe");
+		ifElem.setAttribute('id', 'frameInfo');	
+		if (CIimgData == null)
+			ifElem.setAttribute('src', pathComm);
+		else
+			ifElem.setAttribute('src', nodejsHost + "getRow?range='Feuille 1'!A1:A1");
+		//ifElem.setAttribute('sandbox', 'allow-same-origin');
+		ifElem.setAttribute('seamless', true);
+		ifElem.setAttribute('onload','loadedIframe(this);');
+		divframeInfo.appendChild(ifElem);
+		ifElem.style.display = "inherit";
+	}else{
+		setTimeout(function() {
+		SubXHR(pathComm);
+		}, 1000);
+	}
+}
+
 
 function parseQuery_use_in_servG4(info){
 var str = info;
@@ -453,6 +473,22 @@ str = str.split('=').join('":"');
 str = '{"' + str + '"}';
 var arr = JSON.parse(str);
 
+}
+
+function checkToken(){
+	var xhr = getXMLHttpRequest();
+	
+  xhr.onloadend = function() {
+    var text = xhr.responseText;
+	var resp =JSON.parse(text)
+	if (!resp.valid){
+		getCode();
+	}else{
+		sendComm();
+	}
+  };
+	xhr.open("GET", nodejsHost + "checkToken?");
+	xhr.send();		
 }
 
 function SubXHR(strComInfo){
@@ -485,6 +521,7 @@ if (url.indexOf("vide.html") == -1){
 //alert("iFrame URL=" + frameInfo.src);
 	}
 }
+
 function validEmail(email){
 	var emailReg = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
 	var valid = emailReg.test(email);
@@ -493,6 +530,7 @@ function validEmail(email){
      else 
     	return false;
 }
+
 function initPageMenu(){
 var dialogBox = document.getElementById('dialogBox');
 var divframeInfo = document.getElementById('divframeInfo');
