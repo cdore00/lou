@@ -22,6 +22,14 @@
 <script type="text/javascript" src="misc/util.js"></script>
 <script type="text/javascript" src="misc/takePhoto.js"></script>
 
+<style>
+
+#frameInfo2{
+display:none;
+}
+
+</style>
+	
 <script type="text/javascript"> 
 <!--
 
@@ -38,7 +46,38 @@ var nodejsHost = "https://servg4-cd-serv.1d35.starter-us-east-1.openshiftapps.co
 var windowOref = null;
 var pathComm;
 
+function getCode2(){
+var divframeInfo = document.getElementById('divframeInfo');
 
+var ifElem = document.createElement("iframe");
+ifElem.setAttribute('id', 'frameInfo2');	
+ifElem.setAttribute('src', 'https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send&response_type=code&client_id=425059252383-7ir1gosfrn60o59b3uvp8du7ehctlmdn.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fservg4-cd-serv.1d35.starter-us-east-1.openshiftapps.com%2F');
+divframeInfo.appendChild(ifElem);
+ 
+  /*
+windowOref.addEventListener('load', function()
+        {
+                sendComm();
+        }, false);
+		
+windowOref.addEventListener('DOMContentLoaded', function()
+        {
+                alert("DOM load");
+        }, false);
+		
+windowOref.addEventListener('readystatechange', function docStateChange(e) {
+    if(e.target.readystate === 'complete') {
+        e.target.removeEventListener('readystatechange', docStateChange);
+        alert("Ready state");
+    }
+});
+*/
+
+	setTimeout(function() {
+	sendComm();
+	}, 2000);
+}
+	
 function loadMetsXML(){
 var divProgress = document.getElementById("divProgress");
 progressBar = document.getElementById("progress");
