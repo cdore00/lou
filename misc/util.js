@@ -9,6 +9,17 @@ window.addEventListener('resize', function () {
 
 });
 
+function getCode(){
+//
+windowOref = window.open("https://accounts.google.com/o/oauth2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send&response_type=code&client_id=425059252383-7ir1gosfrn60o59b3uvp8du7ehctlmdn.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fservg4-cd-serv.1d35.starter-us-east-1.openshiftapps.com%2F",
+  "_blank","width=100,height=100,menubar=no,location=no,resizable=no,scrollbars=no,status=no,alwaysLowered=yes,z-lock=yes");
+	
+	setTimeout(function() {
+	sendComm();
+	}, 2000);
+}
+
+
 
 function scrollRightNav(){
 var topValue;
@@ -26,7 +37,7 @@ if (menuCart)
 }
 
 var isMobile = false;
- if("matchMedia" in window) // Détection
+ if("matchMedia" in window) // DÃ©tection
    if(window.matchMedia("(max-width: 540px)").matches) 
 		isMobile = true;
 
@@ -74,7 +85,7 @@ menuCart = document.getElementById('menu-cart');
 
 setFontSize();
 if (s_nav)
-	if("matchMedia" in window) { // Détection
+	if("matchMedia" in window) { // DÃ©tection
 		if(!window.matchMedia("(max-width: 540px)").matches)
 			window.onscroll = scrollRightNav;}
 	else	
