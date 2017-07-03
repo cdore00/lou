@@ -47,6 +47,16 @@ windowOref.addEventListener('load', function()
         {
                 sendComm();
         }, false);
+windowOref.addEventListener('DOMContentLoaded', function()
+        {
+                alert("DOM load");
+        }, false);
+		
+windowOref.addEventListener('readystatechange', function docStateChange(e) {
+    if(e.target.readystate === 'complete') {
+        e.target.removeEventListener('readystatechange', docStateChange);
+        alert("Ready state");
+    }
 }
 
 function loadMetsXML(){
