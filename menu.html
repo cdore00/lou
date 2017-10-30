@@ -89,7 +89,7 @@ if (request){
 		document.body.style.cursor='wait';
        try{
 			request.open("GET", "mets.xml?_=" + new Date().getTime(), true);
-			request.overrideMimeType("application/xml; charset=UTF-8");
+	       		request.overrideMimeType("application/xml; charset=UTF-8");
 			  request.onprogress = function(pe) {
 				if(pe.lengthComputable) {
 				  //progressBar.max = pe.total;
