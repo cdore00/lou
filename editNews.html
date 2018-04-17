@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="fr"/>
+<meta name="contactcity" content="Quebec"/>
+<meta name="contactprovince" content="Quebec"/>
+<meta name="contactcountry" content="Canada"/>
+<title>Traiteur Simpas</title>
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, user-scalable=yes" />
+<link href="misc/favicon.ico" rel="icon" />
+<link href="misc/favicon.ico" rel="shortcut icon" />
+
+<link id="pagestyle" rel="stylesheet" type="text/css" href="misc/photo.css" />
+<!-- Include quill stylesheet -->
+<link href="misc/quill.snow.css" rel="stylesheet">
+
+
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, user-scalable=yes" />
+
+<link href="misc/favicon.ico" rel="icon" />
+<link href="misc/favicon.ico" rel="shortcut icon" />
+
+<script src="misc/util.js"></script>
+<!-- Include the Quill library -->
+<script src="misc/quill.js"></script>
+
+<head>
+
+<script type="text/javascript"> 
+<!--
+var quill = null;
+var container, container2;
+var editChange = false;
+var cursorPos = null;
+var formEmo, winEmo;
+
+function initPage(callB){
+container = document.getElementById('editor');
+container2 = document.getElementById('editor2');
+
+id = getURLdata();
+
+if (id)
+	getInfo("getNews?id=" + id, editNews);
+else
+	initQuill();
+}
+
+function onEditorReady(editor) {
+    return editor.getModule('toolbar').addHandler('image', this.imageHandler);
+ //   console.log('editor ready!', editor);
+}
+
+function initQuill(){
+
+var options = {
+modules: {
+    toolbar: '#toolbar'
+  },
+  placeholder: 'Composer ici...',
+  theme: 'snow'
+};
+
+quill = new Quill(container, options);
+
+// quill editor add image handler
+quill.getModule('toolbar').addHandler('image', () => {
+  selectLocalImage(quill);
+});
+quill.on('text-change', function(delta, oldDelta, source) {
+  if (!editChange) {
+	editorChange();
+  } 
+});
+
+var options2 = {
+modules: { toolbar: '#toolbar2' },
+  placeholder: 'Image ici...',
+  theme: 'snow'
+};
+
+quill2 = new Quill(container2, options2);
+
+quill2.getModule('toolbar').addHandler('image', () => {
+  selectLocalImage(quill2);
+});
+
+quill2.on('text-change', function(delta, oldDelta, source) {
+  if (!editChange) {
+	editorChange();
+  } 
+});
+
+var FontStyle = Quill.import('attributors/style/font');
+	  FontStyle.whitelist=['arial', 'monospace', 'serif', 'haviland', 'helvetica', 'times', 'calibri', 'georgia']
+      Quill.register(FontStyle, true);
+
+}
+
+function editorChange(){
+	var saveLogo = document.getElementById('saveLogo');
+	saveLogo.src = 'misc/save.png';
+    editChange = true;
+}
+
+function selectLocalImage(oQuill) {
+      const input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.click();
+
+      // Listen upload local image and save to server
+      input.onchange = () => {
+        const file = input.files[0];
+
+        // file type is only image.
+        if (/^image\//.test(file.type)) {
+          saveToServer(file, oQuill);
+        } else {
+          console.warn('You could only upload images.');
+        }
+      };
+}
+	
+function saveToServer(file, oQuill) {
+      const fd = new FormData();
+      fd.append('file', file);
+	  fd.append('type', "image");
+
+      const xhr = new XMLHttpRequest();
+      //xhr.open('POST', 'http://0.0.0.0:8080/addFile?', true);
+	  xhr.open('POST', HOSTserv + 'addFile?', true);
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          // this is callback data: url
+          var res = JSON.parse(xhr.responseText);
+          if (res.ok == 1)
+			 insertToEditor(res.url, oQuill)
+		  else
+             alert("Error");
+        }
+      };
+      xhr.send(fd);
+ }
+
+function insertToEditor(url, oQuill) {
+      // push image url to rich editor.
+      const range = oQuill.getSelection();
+	  oQuill.insertEmbed(range.index, 'image', url);
+}
+	
+function editNews(oNews){
+var elemForm = document.getElementById('elemForm');
+elemForm.id_elem.value = oNews._id.$oid;
+elemForm.f_title.value = oNews.title;
+elemForm.f_date.value = oNews.date;
+elemForm.f_dateC.value = getDateTime(oNews.dateC);
+elemForm.f_dateM.value = getDateTime(oNews.dateM);
+
+container2.innerHTML = oNews.contentL;
+container.innerHTML = oNews.contentR;
+
+initQuill();
+
+}
+
+function preview(){
+var elemForm = document.getElementById('elemForm');
+var preview = document.getElementById('preview');
+var previewImg = document.getElementById('previewImg');
+var previewContent = document.getElementById('previewContent');
+var htmlR = '<p class="newsTitle">' + elemForm.f_title.value + '</p><p class="newsDate">' + elemForm.f_date.value + '</p>' + quill.root.innerHTML
+previewContent.innerHTML = htmlR;
+previewImg.innerHTML = quill2.root.innerHTML;
+//x = quill.getContents()
+//alert(quill.root.innerHTML);
+preview.style.visibility = 'visible';
+//preview.style.display = "inherit";
+}
+
+function closePreview(){
+var preview = document.getElementById('preview');
+//preview.style.display = "none";
+preview.style.visibility = 'hidden';
+}
+
+function changeFont(oToolFont){
+
+switch(oToolFont.value) {
+
+    case "small":
+        oToolFont.value = "normal";
+        break;
+    case "normal":
+        oToolFont.value = "large";
+        break;
+    case "large":
+        oToolFont.value = "huge";
+        break;
+    case "huge":
+        oToolFont.value = "small";
+        break
+} 
+}
+
+function savedata(){
+if (editChange){
+	var elemForm = document.getElementById('elemForm');
+	var f_title = elemForm.f_title.value;
+	var content = quill.getText();
+	var htmlContentL = encodeURI(quill2.root.innerHTML);
+	var htmlContentR = encodeURI(quill.root.innerHTML);
+	if (!f_title || f_title == ''){
+		f_title = content.substring(0,12);
+		elemForm.f_title.value = f_title;
+		}
+	var f_active = elemForm.f_active.checked;
+	var f_date = elemForm.f_date.value;
+	if (!f_date || f_date == ''){
+		f_date = content.substring(0,12);
+		elemForm.f_date.value = f_date;
+		}
+	var id_elem = elemForm.id_elem.value;
+
+	comm = "writeNews?id=" + id_elem + "&title=" + f_title + "&active=" + ((f_active) ? "1":"0" ) + "&date=" + f_date + "&contentL=" + htmlContentL + "&contentR=" + htmlContentR;
+	getInfo(comm, evalResult);
+}
+}
+
+function evalResult(result){
+var elemForm = document.getElementById('elemForm');
+var saveLogo = document.getElementById('saveLogo');
+
+if (result){
+	if (result.ok){
+		saveLogo.src = 'misc/saved.png';
+		editChange = false;  // Disable save icon
+		if (result.id){	//New news added
+			elemForm.id_elem.value = result.id;
+		}	
+	}else
+		alert(result);
+}else
+	alert(result);
+}
+
+function insertButton(oBut){
+var divEmoC = document.getElementById('divEmoC');
+
+if (divEmoC.style.visibility == "visible")
+	divEmoC.style.visibility = "hidden";
+else{
+	cursorPos = quill.getSelection();
+	divEmoC.style.left = oBut.offsetLeft + "px";
+	divEmoC.style.top = (oBut.offsetHeight + oBut.offsetTop) + "px";
+	divEmoC.style.visibility = "visible";
+}
+//https://twemoji.maxcdn.com/2/test/preview.html
+//https://en.wikipedia.org/wiki/Emoji
+}
+
+function insertEmoji(oBut){
+//var divEmoC = document.getElementById('divEmoC');
+
+if (typeof(oBut)) 
+	if (oBut.id == "form_emoji")
+		var but = oBut.car_icon.value;  //Call from Other form
+	else{
+		var divEmoC = document.getElementById('divEmoC');
+		if (divEmoC.style.visibility == "visible")
+			divEmoC.style.visibility = "hidden";
+		var but = oBut;	//Call from Window winEmo
+		}
+else
+	var but = oBut.innerHTML;  //Call from toolBar
+	
+quill.insertText(cursorPos, but);
+}
+
+function otherEmo(){
+formEmo = document.getElementById('form_emoji');
+cursorPos = quill.getSelection();
+winEmo = window.open("emoji.html", "emojW", "width=500, height=500");
+
+}
+
+
+// -->
+</script> 
+
+<style>
+
+body{
+color: black;
+background:#FFF;-webkit-touch-callout:none}
+
+#editor, #toolbar, #preview{
+background: white;
+color: black;
+}
+
+#preview{
+position: fixed;
+top: 0px;
+/*display: none;
+display: block;*/
+text-align:center;
+visibility: hidden;
+width: 100%;
+height: 100%;
+}
+
+#zoneEdit{
+position: relative;
+}
+
+.ql-header, ql-size, ql-font{
+width: 6em !important;
+}
+
+.noright{
+margin-right: 0px !important;
+}
+
+.zoneRight, .zoneLeft{
+height: auto;
+}
+
+.zoneRight{
+float: right;
+width: 64%;
+}
+
+.zoneLeft{
+float: left;
+width: 34%;
+text-align: center;
+}
+
+.newsDate{
+font-style: italic;
+}
+
+.newsTitle{
+font-size: 2em;
+}
+
+.footPreview{
+clear: both;
+}
+
+#divEmoC{
+position: absolute;
+background: white;
+visibility: hidden;
+width: 150px;
+cursor: pointer;
+}
+
+#form_emoji{
+font-weight:bold;
+}
+
+.ql-primary{
+border: 1px solid #ccc;
+width: 24px;
+display: inline-block;
+}
+
+</style>
+
+</head>
+<body onload="initPage();">
+
+<div id="entete">
+
+<div id="listNews">
+
+</div>
+
+<h1>&Eacute;diter nouvelles</h1>
+</div>
+
+
+
+<form id="elemForm" action="#">
+ <p><label for="f_title">&nbsp;Titre&nbsp;:&nbsp;</label>&nbsp;<input  id="f_title" type="text" placeholder="Titre..." value=""/>&nbsp;</p>
+ <p><label for="f_date">&nbsp;Date de la nouvelle&nbsp;:&nbsp;</label>&nbsp;<input  id="f_date" type="text" placeholder="Date..." value=""/>&nbsp;</p>
+ <p><label for="f_dateC">&nbsp;Date de création&nbsp;:&nbsp;</label>&nbsp;<input  id="f_dateC" type="text"  disabled />&nbsp;</p>
+ <p><label for="f_dateM">&nbsp;Date de modification&nbsp;:&nbsp;</label>&nbsp;<input  id="f_dateM" type="text"  disabled />&nbsp;</p>
+ <p><label for="f_active">&nbsp;Actif&nbsp;:&nbsp;</label>&nbsp;<input id="f_active" type="checkbox" checked />&nbsp;</p>
+ 
+ <input  id="id_elem" type="hidden"/>
+</form>
+
+<div id="zoneEdit">
+<div id="zoneTxt" class="zoneRight">
+<div id="toolbar">
+  <!-- Add font size dropdown -->
+  <span class="ql-formats noright">
+	<button id="save-button" onclick="savedata();"><img id="saveLogo" alt="Enregistrer" height="24" width="24" src="misc/saved.png"/></button>
+  </span>
+  <span class="ql-formats noright">
+	<button id="preview-button" onclick="preview();"><img id="prevLogo" alt="Visualiser" height="24" width="24" src="misc/view2.png"/></button>
+  </span>
+ 
+  <span class="ql-formats noright">
+  <select class="ql-header" title="Titre">
+    <option value="1">Titre 1</option>
+    <!-- Note a missing, thus falsy value, is used to reset to default -->
+    <option value="2">Titre 2</option>
+    <option value="3">Titre 3</option>
+	<option value="4">Titre 4 (centré)</option>
+	<option value="5">Titre 5</option>
+    <option selected>Normale</option>
+  </select>
+  
+  <select class="ql-size" title="Taille">
+    <option value="small">Petite</option>
+    <!-- Note a missing, thus falsy value, is used to reset to default -->
+    <option selected>Normale</option>
+    <option value="large">Grande</option>
+    <option value="huge">Très grande</option>
+  </select>
+  
+  <select class="ql-font" title="Police">
+    <option selected>Normale</option>
+	<option value="arial">Arial</option>
+	<option value="calibri">Calibri</option>
+	<option value="monospace">Courier</option>
+	<option value="georgia">Georgia</option>	
+	<option value="haviland">Haviland</option>
+	<option value="helvetica">Helvetica</option>
+    <option value="serif">Serif</option>
+    
+  </select>
+  </span>
+  
+  <!-- Add a bold button -->
+  <span class="ql-formats">
+  <button class="ql-bold"></button>
+  <button class="ql-italic"></button>
+  <button class="ql-underline"></button>
+  <button id="font-size" class="ql-size" value="normal" onclick="changeFont(this);"><img id="saveLogo" alt="Taille" height="18" width="18" src="misc/increase-font.png"/></button>
+  </span>
+  <span class="ql-formats">
+  <button class="ql-link"></button>
+  <button class="ql-image"></button>
+  </span>
+  <span class="ql-formats">
+  <button class="ql-list" value="ordered"></button>
+  <button class="ql-list" value="bullet"></button>
+  <button class="ql-indent" value="-1"></button>
+  <button class="ql-indent" value="+1"></button>
+    <select class="ql-align" title="Police">
+    <option selected>Normale</option>
+    <option value="center">centre</option>
+	<option value="right">droite</option>
+	<option value="justify">justifié</option>
+    </select>
+  </span>  
+  <span class="ql-formats">
+    <select class="ql-color" title="Taille">
+    <option value="#000000"></option>
+    <option value="#ffffff"></option>
+	<option value="#ff0000"></option>
+	<option value="#00ff00"></option>
+	<option value="#0000ff"></option>
+	<option value="#ffff00"></option>
+	<option value="#ff9900"></option>
+    </select>  
+    <select class="ql-background" title="Taille">
+    <option value="#000000"></option>
+    <option value="#ffffff"></option>
+	<option value="#ff0000"></option>
+	<option value="#00ff00"></option>
+	<option value="#0000ff"></option>
+	<option value="#ffff00"></option>
+	<option value="#ff9900"></option>
+  </select>
+  </span>  
+  <span class="ql-formats">  
+  <!-- Add subscript and superscript buttons -->
+  <button class="ql-script" value="sub"></button>
+  <button class="ql-script" value="super"></button>
+  <span class="ql-formats">
+	<button class="ql-clean" title="Supprimer mise en forme de la sélection"></button>
+  </span>
+  </span>
+  
+   <span class="ql-formats">
+  <button id="custom-but" onclick="insertButton(this);"><img id="saveLogo" alt="Taille" width="22" src="misc/emoji.png"/></button>
+
+     </span>
+</div>
+  
+  
+<!-- Create the editor container -->
+<div id="editor"></div> 
+
+</div> <!-- End txt  zone -->
+
+<div id="zoneImg" class="zoneLeft">
+<div id="toolbar2">
+ <span class="ql-formats">
+  <button class="ql-link"></button>
+  <button class="ql-image"></button>
+ </span>
+</div>
+<div id="editor2"></div> 
+
+</div> <!-- End zone img  -->
+
+
+<div id="divEmoC">
+  <span class="ql-picker-options" aria-hidden="false" tabindex="-1" >
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😀</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😂</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😍</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😎</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😳</span>
+
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😛</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >🙄</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😇</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >👶</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >👿</span>
+  
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >❤</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >🍷</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >🛒</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >🥧</span>
+  <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >🥕</span>
+  
+  </span> 
+  <span class="ql-picker-options" aria-hidden="false" tabindex="-1" >
+	<form id="form_emoji">
+	<a href="javascript:otherEmo()">&nbsp;&nbsp;Autre...</a><input id="car_icon" type="text" size="1" /><input type="button" value="Ok" onclick="insertEmoji(this.form);" />
+	<!-- <a target="_blank" href="https://twemoji.maxcdn.com/2/test/preview.html">&nbsp;&nbsp;Autre...</a> -->
+	</form>
+  </span> 
+</div>
+
+
+</div> <!-- End zone edit  -->
+
+<div id="preview" class="ql-container ql-snow">
+<p>&nbsp;</p><p>&nbsp;</p><hr>
+<a href="javascript:closePreview()" title="Close" class="closeModal">X</a>
+<div id="previewContent" class="ql-editor zoneRight">
+</div>
+<div id="previewImg" class="ql-editor zoneLeft">
+</div>
+<div class="footPreview">
+<p>&nbsp;</p>
+<hr>
+<button id="closebutton" class="butContent" onclick="closePreview();">Fermer</button>
+</div>
+</div>
+
+</body>	 
+ </html>
