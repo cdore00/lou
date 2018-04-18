@@ -26,7 +26,7 @@
       vertical-align: -0.1em;
     }
     </style>
-    <script src="emoji.js"></script>
+    <script src="misc/emoji.js"></script>
 <script type="text/javascript"> 
 <!--
 
@@ -70,14 +70,7 @@ x=3;
       <li>&#x1F617;</li>
       <li>&#x1F618;</li>
       <li>&#x1F927;</li>
-      <li>&#x1F928;</li>
-      <li>&#x1F929;</li>
-      <li>&#x1F92A;</li>
-      <li>&#x1F92B;</li>
-      <li>&#x1F92C;</li>
-      <li>&#x1F92D;</li>
-      <li>&#x1F92E;</li>
-      <li>&#x1F92F;</li>
+
 
       <li>&#x1F920;</li>
       <li>&#x1F921;</li>
@@ -560,7 +553,7 @@ x=3;
       function copyToClipboard(e) {
 		x = this.alt;
 		//console.log(x);
-		if (typeof(opener.formEmo.car_icon)){
+		if ( opener && opener.formEmo.car_icon ){
 			//opener.formEmo.car_icon.value = x;
 			opener.insertEmoji(x);
 			//opener.formEmo.car_icon.focus();

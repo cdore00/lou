@@ -6,7 +6,7 @@
 <meta name="contactcity" content="Quebec"/>
 <meta name="contactprovince" content="Quebec"/>
 <meta name="contactcountry" content="Canada"/>
-<title>Traiteur Simpas</title>
+<title>Test</title>
 <meta name="viewport" content="minimum-scale=1.0, width=device-width, user-scalable=yes" />
 <link href="misc/favicon.ico" rel="icon" />
 <link href="misc/favicon.ico" rel="shortcut icon" />
@@ -23,7 +23,7 @@
 
 <script src="misc/util.js"></script>
 <!-- Include the Quill library -->
-<script src="misc/quill.js"></script>
+<script src="quill/quill.min.js"></script>
 
 <head>
 
@@ -33,17 +33,23 @@ var quill = null;
 var container, container2;
 var editChange = false;
 var cursorPos = null;
-var formEmo, winEmo;
+var formEmo;
 
-function initPage(callB){
+function initPage(){
 container = document.getElementById('editor');
 container2 = document.getElementById('editor2');
 
-id = getURLdata();
+/// À ajouter
+favIcon = localStorage.getItem("favIcon");
+if (favIcon)
+	updPrefEmo(JSON.parse(favIcon));
+///
 
-if (id)
+//id = getURLdata();
+
+/*if (id)
 	getInfo("getNews?id=" + id, editNews);
-else
+else*/
 	initQuill();
 }
 
@@ -63,8 +69,6 @@ modules: {
 };
 
 quill = new Quill(container, options);
-
-// quill editor add image handler
 quill.getModule('toolbar').addHandler('image', () => {
   selectLocalImage(quill);
 });
@@ -73,7 +77,10 @@ quill.on('text-change', function(delta, oldDelta, source) {
 	editorChange();
   } 
 });
-
+var FontStyle = Quill.import('attributors/style/font');
+	  FontStyle.whitelist=['arial', 'monospace', 'serif', 'haviland', 'helvetica', 'times', 'calibri', 'georgia']
+      Quill.register(FontStyle, true);
+	  
 var options2 = {
 modules: { toolbar: '#toolbar2' },
   placeholder: 'Image ici...',
@@ -81,27 +88,23 @@ modules: { toolbar: '#toolbar2' },
 };
 
 quill2 = new Quill(container2, options2);
-
 quill2.getModule('toolbar').addHandler('image', () => {
   selectLocalImage(quill2);
 });
-
 quill2.on('text-change', function(delta, oldDelta, source) {
   if (!editChange) {
 	editorChange();
   } 
 });
 
-var FontStyle = Quill.import('attributors/style/font');
-	  FontStyle.whitelist=['arial', 'monospace', 'serif', 'haviland', 'helvetica', 'times', 'calibri', 'georgia']
-      Quill.register(FontStyle, true);
-
 }
 
 function editorChange(){
+if (!editChange){
 	var saveLogo = document.getElementById('saveLogo');
 	saveLogo.src = 'misc/save.png';
-    editChange = true;
+	editChange = true;
+	}
 }
 
 function selectLocalImage(oQuill) {
@@ -265,30 +268,81 @@ else{
 }
 
 function insertEmoji(oBut){
-//var divEmoC = document.getElementById('divEmoC');
+var divEmoC = document.getElementById('divEmoC');
 
-if (typeof(oBut)) 
-	if (oBut.id == "form_emoji")
+if (typeof(oBut) == "object"){
+	if (oBut.id == "form_emoji"){
 		var but = oBut.car_icon.value;  //Call from Other form
-	else{
-		var divEmoC = document.getElementById('divEmoC');
-		if (divEmoC.style.visibility == "visible")
+		if (but == ""){
 			divEmoC.style.visibility = "hidden";
-		var but = oBut;	//Call from Window winEmo
+			return;
 		}
-else
-	var but = oBut.innerHTML;  //Call from toolBar
-	
+	}else{
+		var but = oBut.innerHTML;  //Call from toolBar
+		}
+}else{
+	var divEmoC = document.getElementById('divEmoC');
+	if (divEmoC.style.visibility == "visible")
+		divEmoC.style.visibility = "hidden";
+	var but = oBut;	//Call from Window winEmo
+}
+if (cursorPos == null){
+	cursorPos = quill.getSelection();
+	if (cursorPos == null)
+		cursorPos = 0;
+	}
+toUpd = updEmoHist(but);
+if (toUpd)
+	updPrefEmo(toUpd);
 quill.insertText(cursorPos, but);
 }
 
 function otherEmo(){
 formEmo = document.getElementById('form_emoji');
 cursorPos = quill.getSelection();
-winEmo = window.open("emoji.html", "emojW", "width=500, height=500");
-
+var winEmo = window.open("emoji.html", "emojW", "width=500, height=500");
 }
 
+function updEmoHist(but){
+var collEmo = document.getElementById('collEmo');
+arrEmo = [];
+var isToUpd = true;
+
+for (i = 0; i < collEmo.childNodes.length; i++) {
+if (collEmo.childNodes[i].nodeName == "SPAN"){
+		//console.log(collEmo.childNodes[i].innerHTML);
+		var emo = collEmo.childNodes[i].innerHTML;
+		arrEmo[arrEmo.length] = emo;
+		if (emo == but)
+			isToUpd = false;
+	}
+}
+if (isToUpd){
+	isToUpd = arrEmo.slice(arrEmo.length - 5, arrEmo.length - 1);
+	isToUpd.unshift(but);
+}
+return isToUpd;
+}
+
+function updPrefEmo(arrEmo){
+var collEmo = document.getElementById('collEmo');
+var cnt = 4;
+localStorage.setItem("favIcon", JSON.stringify(arrEmo));
+
+for (i = collEmo.childNodes.length - 1; i >= 0; i--) {
+	if (collEmo.childNodes[i].nodeName == "SPAN"){
+		collEmo.childNodes[i].innerHTML = arrEmo[cnt];
+		cnt--
+		if (cnt < 0)
+			break;
+	}
+}
+}
+
+function setPos(){
+cursorPos = quill.getSelection();
+//console.log(cursorPos);
+}
 
 // -->
 </script> 
@@ -394,14 +448,12 @@ display: none;
 <h1>&Eacute;diter nouvelles</h1>
 </div>
 
-
-
 <form id="elemForm" action="#">
- <p><label for="f_title">&nbsp;Titre&nbsp;:&nbsp;</label>&nbsp;<input  id="f_title" type="text" placeholder="Titre..." value=""/>&nbsp;</p>
- <p><label for="f_date">&nbsp;Date de la nouvelle&nbsp;:&nbsp;</label>&nbsp;<input  id="f_date" type="text" placeholder="Date..." value=""/>&nbsp;</p>
- <p><label for="f_dateC">&nbsp;Date de création&nbsp;:&nbsp;</label>&nbsp;<input  id="f_dateC" type="text"  disabled />&nbsp;</p>
+ <p><label for="f_title">&nbsp;Titre&nbsp;:&nbsp;</label>&nbsp;<input id="f_title" oninput="editorChange()" type="text" placeholder="Titre..." value=""/>&nbsp;</p>
+ <p><label for="f_date">&nbsp;Date de la nouvelle&nbsp;:&nbsp;</label>&nbsp;<input id="f_date" oninput="editorChange()" type="text" placeholder="Date..." value=""/>&nbsp;</p>
+ <p><label for="f_dateC">&nbsp;Date de création&nbsp;:&nbsp;</label>&nbsp;<input id="f_dateC" type="text"  disabled />&nbsp;</p>
  <p><label for="f_dateM">&nbsp;Date de modification&nbsp;:&nbsp;</label>&nbsp;<input  id="f_dateM" type="text"  disabled />&nbsp;</p>
- <p><label for="f_active">&nbsp;Actif&nbsp;:&nbsp;</label>&nbsp;<input id="f_active" type="checkbox" checked />&nbsp;</p>
+ <p><label for="f_active">&nbsp;Actif&nbsp;:&nbsp;</label>&nbsp;<input id="f_active" oninput="editorChange()" type="checkbox" checked />&nbsp;</p>
  
  <input  id="id_elem" type="hidden"/>
 </form>
@@ -506,10 +558,10 @@ display: none;
 
      </span>
 </div>
-  
+ 
   
 <!-- Create the editor container -->
-<div id="editor"></div> 
+<div id="editor" onclick="setPos();"></div> 
 
 </div> <!-- End txt  zone -->
 
@@ -526,7 +578,7 @@ display: none;
 
 
 <div id="divEmoC">
-  <span class="ql-picker-options" aria-hidden="false" tabindex="-1" >
+  <span id="collEmo" class="ql-picker-options" aria-hidden="false" tabindex="-1" >
   <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😀</span>
   <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😂</span>
   <span tabindex="0" role="button" class="ql-picker-item ql-primary" onclick="insertEmoji(this);" >😍</span>
