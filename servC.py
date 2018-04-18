@@ -22,11 +22,21 @@ from io import BytesIO
 #HOSTserv = 'http://127.0.0.1:3000/'
 HOSTclient = "https://loupop.ddns.net/";
 
+
+#from datetime import timedelta
+
+def millis():
+   """ returns the elapsed milliseconds (1970/1/1) since now """
+   dt = datetime.now() - datetime(1970, 1, 1)
+   ms = (dt.days * 24 * 60 * 60 + dt.seconds) * 1000 + dt.microseconds / 1000.0
+   return ms
+
+
 #Log file
 LOG_DIR =os.getcwd() + '/log'
 if not os.path.exists(LOG_DIR):
 	os.makedirs(LOG_DIR)
-LOG_FILE = 'log/' + str(int(time.time())) + '.log'
+LOG_FILE = 'log/' + str(int(millis())) + '.log'
 print(os.getcwd())
 print("LOg file: " + LOG_DIR)
 IMG_DIR = LOG_DIR + "/"
@@ -199,7 +209,12 @@ def cursorTOdict(doc):
 def listNews(param):
 	""" Return news list """
 	coll = data['news']
-	docs = coll.find({})
+	#pdb.set_trace()
+	if param and param.get("data"):
+		actif = int(param['data'][0])
+		docs = coll.find({"active": actif}).sort("dateC", -1)
+	else:
+		docs = coll.find({},["title","date","dateC"]).sort("dateC", -1)
 	return dumps(docs)
 
 def getNews(param):
@@ -239,12 +254,12 @@ def writeNews(param):
 		#pdb.set_trace()
 		coll = data['news']
 		if param.get("id") is None:
-			docr = coll.insert({"title": param['title'][0] , "active": int(param['active'][0]), "date": param['date'][0] , "dateC": int(time.time()), "dateM": int(time.time()), "contentL": param['contentL'][0], "contentR": param['contentR'][0]}, {"new":True})
+			docr = coll.insert({"title": param['title'][0] , "active": int(param['active'][0]), "date": param['date'][0] , "dateC": int(millis()), "dateM": int(millis()), "contentL": param['contentL'][0], "contentR": param['contentR'][0]}, {"new":True})
 			o_id = str(ObjectId(docr))
 			return dumps({"ok": 1, "id": o_id})
 		else:
 			o_id = ObjectId(param['id'][0])
-			docr = coll.update_one({ '_id': o_id}, { '$set': {"title": param['title'][0] , "active": int(param['active'][0]), "date": param['date'][0], "dateM": int(time.time()) , "contentL": param['contentL'][0], "contentR": param['contentR'][0]}},  upsert=True )
+			docr = coll.update_one({ '_id': o_id}, { '$set': {"title": param['title'][0] , "active": int(param['active'][0]), "date": param['date'][0], "dateM": int(millis()) , "contentL": param['contentL'][0], "contentR": param['contentR'][0]}},  upsert=True )
 			
 			#doc=coll.update_one({"title": "tit3"}, {"$set": {"title": "tit4"}}, upsert=True)
 
@@ -292,7 +307,7 @@ def readCommandQuery(query):
 		M1.append(M1info[0])
 		M3.append(M3info[0])
 	
-	InfoArr.append(int(time.time()))									#0 Time in second
+	InfoArr.append(int(millis()))										#0 Time in second
 	InfoArr.append(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))	#1 Time label
 	InfoArr.append(gethostbyname(gethostname()))						#2 IP address
 	InfoArr.append(param['nam'][0] if 'nam' in param else "")			#3 Name
