@@ -28,9 +28,8 @@
 
 <script type="text/javascript"> 
 <!--
-var newsData = null;
 
-function initPage(callB){
+function initPage(){
 
 getInfo("listNews", listResult);
 
@@ -40,14 +39,12 @@ function listResult(data){
 var listNews = document.getElementById('listNews');
 var htmlStr = "";
 
-newsData = data;
-
 var ulElem = document.createElement("ul");
 
 for (var i = 0; i < data.length ; i ++) { 
 	var liElem = document.createElement("li");
-	liElem.setAttribute('class', 'listitem');
-	liElem.innerHTML = '<a href="editNews.html?data=' + data[i]._id.$oid + '" target="_blank">' + data[i].title + "</a>";
+	//liElem.setAttribute('class', 'listitem');
+	liElem.innerHTML = '<div class="itemDesc"><a href="editNews.html?data=' + data[i]._id.$oid + '" target="_blank"><div class="zoneRight">' + data[i].title + '</div><div class="zoneLeft">' + data[i].date + '<p class="pDate">' + getDateTime(data[i].dateC) + "</p></div></a></div>";
 	//liElem.innerHTML = '<a class="" href="javascript:showNews(' + i + ');">' + data[i].title + "</a></br>";
 	ulElem.appendChild(liElem);
 }
@@ -62,7 +59,36 @@ listNews.appendChild(ulElem);
 
 body{
 color: black;
-background:#FFF;-webkit-touch-callout:none}
+background:#FFF;
+-webkit-touch-callout:none}
+
+.listItem-gallery{
+margin-left: 10%;
+margin-right: 10%;
+}
+
+.listItem-gallery ul li{
+background:#eee;
+}
+
+.zoneRight, .zoneLeft{
+height: auto;
+}
+
+.zoneRight{
+float: right;
+width: 64%;
+}
+
+.zoneLeft{
+float: left;
+width: 34%;
+text-align: center;
+}
+
+.pDate{
+margin: 0;
+}
 
 </style>
 
@@ -73,7 +99,7 @@ background:#FFF;-webkit-touch-callout:none}
 <h1>&Eacute;diter nouvelles</h1>
 
 </div>
-<div id="listNews">
+<div id="listNews" class="listItem-gallery">
 
 </div>
 

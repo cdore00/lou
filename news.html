@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" />
+<meta http-equiv="Content-Language" content="fr"/>
+<meta name="contactcity" content="Quebec"/>
+<meta name="contactprovince" content="Quebec"/>
+<meta name="contactcountry" content="Canada"/>
+<title>Traiteur Simpas</title>
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, user-scalable=yes" />
+<link href="misc/favicon.ico" rel="icon" />
+<link href="misc/favicon.ico" rel="shortcut icon" />
+<link rel="stylesheet" type="text/css" href="misc/init.css" media="screen" />
+<link id="pagestyle" rel="stylesheet" type="text/css" href="misc/photo.css" />
+
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, user-scalable=yes" />
+
+<link href="misc/favicon.ico" rel="icon" />
+<link href="misc/favicon.ico" rel="shortcut icon" />
+
+<script type="text/javascript" src="misc/util.js"></script>
+<script type="text/javascript"> 
+<!--
+
+function initNewsPage(){
+initPage();
+getInfo("listNews?data=1", listResult);
+
+}
+
+function listResult(data){
+var newsColl = document.getElementById('newsColl');
+//var htmlStr = "";
+
+var ulElem = document.createElement("ul");
+
+for (var i = 0; i < data.length ; i ++) { 
+	var liElem = document.createElement("li");
+	var plat = data[i];
+    //var fichier = rep + "photos/" + plat.childNodes[1].childNodes[0].nodeValue;
+    //var desc = plat.childNodes[3].childNodes[0].nodeValue;
+
+	//Image
+	var leftElem = document.createElement("div");
+	leftElem.innerHTML = plat.contentL;
+	leftElem.setAttribute('class', 'ql-editor zoneLeft');
+	liElem.appendChild(leftElem);
+
+	//Description
+	var divElem = document.createElement('div');
+	divElem.setAttribute('class', 'itemDesc');
+	var pElem = document.createElement('span');
+	pElem.innerHTML=plat.title;
+	divElem.appendChild(pElem);
+/*	var pElem = document.createElement('p');
+	pElem.innerHTML='<a title="Haut de page" href="#hautPage"><img src="misc/haut.png" alt="Haut de page"/></a>';
+	pElem.setAttribute('class', 'boutHaut');
+	divElem.appendChild(pElem);   */
+	liElem.appendChild(divElem);
+	ulElem.appendChild(liElem);
+
+}
+newsColl.appendChild(ulElem);
+
+}
+
+// -->
+</script> 
+
+<style>
+
+.zoneLeft{
+float: left;
+width: 34% !important;
+text-align: center;
+}
+
+img {
+    width: 100%; /* or any custom size */
+    height: 90%; 
+    object-fit: contain;
+}
+
+</style>
+</head>
+
+<body onload="initNewsPage();">
+
+<div id="entete">
+<a name="hautPage"></a>
+<div id="fontAdjust">
+<div class="divFont" onclick="setFontS(0.2, this)"><div class="divFontSize">A</div><div class="fontLogo">&#8593;</div></div>
+<div class="divFont" onclick="setFontS(-0.2, this)"><div class="divFontSize fontSmall">A</div><div class="fontLogo">&#8595;</div></div>
+</div>
+<h1>Traiteur Simpas</h1>
+</div>
+
+<div id="divmenu">
+<ul>
+	<li>
+	<a href="index.html">Accueil</a>
+	</li>
+	<li>
+	<a href="repas.html">Repas pr&eacute;par&eacute;s</a> 
+	</li>
+	<li>
+	<a href="joindre.html">Traiteur</a>
+	</li>
+	<li>
+	<a href="joindre.html">Certificat-cadeau</a>
+	</li>
+	<li>
+	<a href="a_propos.html">&Agrave; propos</a>
+	</li>
+	<li>
+	<a href="joindre.html">Nous joindre</a>
+	</li>
+</ul>
+</div>
+
+
+<div id="content">
+<h2>Nouvelles</h2>
+<h3>Traiteur Simpas</h3>
+
+<div class="alignLeft">
+
+<div id="newsColl" class="listItem-gallery ql-container ql-snow">
+
+</div>
+
+</div>
+
+</div>  <!--End content // -->
+
+<div id="piedPage">
+
+<div>
+<p id="copyright"><a href="mailto:traiteur.simpas@gmail.com?Subject=traiteursimpas.com">&copy; Tous droits r&eacute;serv&eacute;s: Chef Catering 2018</a></p></div>
+</div>
+
+
+ </body>	 
+ </html>

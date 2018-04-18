@@ -185,20 +185,25 @@ preview.style.visibility = 'hidden';
 }
 
 function changeFont(oToolFont){
+var oTollZize = document.getElementById('oTollZize');
 
 switch(oToolFont.value) {
 
     case "small":
         oToolFont.value = "normal";
+		oTollZize.childNodes[1].childNodes[1].click();
         break;
     case "normal":
         oToolFont.value = "large";
+		oTollZize.childNodes[1].childNodes[2].click();
         break;
     case "large":
         oToolFont.value = "huge";
+		oTollZize.childNodes[1].childNodes[3].click();
         break;
     case "huge":
         oToolFont.value = "small";
+		oTollZize.childNodes[1].childNodes[0].click();
         break
 } 
 }
@@ -318,6 +323,10 @@ position: relative;
 width: 6em !important;
 }
 
+.ql-snow .ql-picker.ql-font {
+    width: 6em !important;
+}
+
 .noright{
 margin-right: 0px !important;
 }
@@ -365,6 +374,10 @@ font-weight:bold;
 border: 1px solid #ccc;
 width: 24px;
 display: inline-block;
+}
+
+#oTollZize{
+display: none;
 }
 
 </style>
@@ -415,7 +428,7 @@ display: inline-block;
     <option selected>Normale</option>
   </select>
   
-  <select class="ql-size" title="Taille">
+  <select id="oTollZize" class="ql-size" title="Taille">
     <option value="small">Petite</option>
     <!-- Note a missing, thus falsy value, is used to reset to default -->
     <option selected>Normale</option>
@@ -441,7 +454,7 @@ display: inline-block;
   <button class="ql-bold"></button>
   <button class="ql-italic"></button>
   <button class="ql-underline"></button>
-  <button id="font-size" class="ql-size" value="normal" onclick="changeFont(this);"><img id="saveLogo" alt="Taille" height="18" width="18" src="misc/increase-font.png"/></button>
+  <button value="normal" onclick="changeFont(this);"><img id="saveLogo" alt="Taille" height="18" width="18" src="misc/increase-font.png"/></button>
   </span>
   <span class="ql-formats">
   <button class="ql-link"></button>
@@ -479,16 +492,16 @@ display: inline-block;
 	<option value="#ff9900"></option>
   </select>
   </span>  
-  <span class="ql-formats">  
+  <span class="ql-formats noright">  
   <!-- Add subscript and superscript buttons -->
   <button class="ql-script" value="sub"></button>
   <button class="ql-script" value="super"></button>
-  <span class="ql-formats">
+
 	<button class="ql-clean" title="Supprimer mise en forme de la sélection"></button>
-  </span>
+
   </span>
   
-   <span class="ql-formats">
+   <span class="ql-formats noright">
   <button id="custom-but" onclick="insertButton(this);"><img id="saveLogo" alt="Taille" width="22" src="misc/emoji.png"/></button>
 
      </span>
