@@ -12,6 +12,28 @@
 <link href="misc/favicon.ico" rel="shortcut icon" />
 
 <link id="pagestyle" rel="stylesheet" type="text/css" href="misc/photo.css" />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mina">
+
+<!--
+	'Mina'
+	'Economica'
+	'Damion'	
+	'Syncopate'
+	'Allura'
+	'Dokdo'
+	'Courgette'
+	'Cookie'
+	'Parisienne'
+	'Rochester'
+	'Diplomata'
+	'Ewert'
+	'Mina'
+	'Mina'
+	
+ -->
+	
 <!-- Include quill stylesheet -->
 <link href="misc/quill.snow.css" rel="stylesheet">
 
@@ -23,7 +45,7 @@
 
 <script src="misc/util.js"></script>
 <!-- Include the Quill library -->
-<script src="quill/quill.min.js"></script>
+<script src="misc/quill.js"></script>
 
 <head>
 
@@ -39,17 +61,15 @@ function initPage(){
 container = document.getElementById('editor');
 container2 = document.getElementById('editor2');
 
-/// À ajouter
 favIcon = localStorage.getItem("favIcon");
 if (favIcon)
 	updPrefEmo(JSON.parse(favIcon));
-///
 
-//id = getURLdata();
+id = getURLdata();
 
-/*if (id)
+if (id)
 	getInfo("getNews?id=" + id, editNews);
-else*/
+else
 	initQuill();
 }
 
@@ -68,6 +88,11 @@ modules: {
   theme: 'snow'
 };
 
+var FontStyle = Quill.import('attributors/style/font');
+//var FontStyle = Quill.import('formats/font');
+	  FontStyle.whitelist=['arial', 'monospace', 'serif', 'haviland', 'helvetica', 'times', 'calibri', 'georgia', 'Tangerine', "Mina"]
+      Quill.register(FontStyle, true);
+
 quill = new Quill(container, options);
 quill.getModule('toolbar').addHandler('image', () => {
   selectLocalImage(quill);
@@ -77,9 +102,7 @@ quill.on('text-change', function(delta, oldDelta, source) {
 	editorChange();
   } 
 });
-var FontStyle = Quill.import('attributors/style/font');
-	  FontStyle.whitelist=['arial', 'monospace', 'serif', 'haviland', 'helvetica', 'times', 'calibri', 'georgia']
-      Quill.register(FontStyle, true);
+
 	  
 var options2 = {
 modules: { toolbar: '#toolbar2' },
@@ -358,6 +381,7 @@ background: white;
 color: black;
 }
 
+
 #preview{
 position: fixed;
 top: 0px;
@@ -497,7 +521,9 @@ display: none;
 	<option value="haviland">Haviland</option>
 	<option value="helvetica">Helvetica</option>
     <option value="serif">Serif</option>
-    
+	<option value="Tangerine">Tangerine</option>
+	<option value="Mina">Mina</option>
+	
   </select>
   </span>
   
