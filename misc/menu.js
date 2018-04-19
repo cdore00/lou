@@ -46,8 +46,10 @@ var subMenus = [
 function initMenu(selID){
 var optColl = document.getElementsByClassName("optMenu");
 for (i = 0; i < optColl.length; i++) {
-	if (optColl[i].id == selID)
+	if (optColl[i].id == selID){
 		optColl[i].classList.add('selectedOpt');
+		optColl[i].href = '#';
+		}
 }
 }
 
