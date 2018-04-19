@@ -52,6 +52,7 @@ for (i = 0; i < optColl.length; i++) {
 }
 
 function showSubMenu(oOpt){
+var ht = 0;
 var docBody = document.getElementsByTagName("BODY")[0];
 var parent = oOpt.parentNode;
 var subName = oOpt.id + "sub";
@@ -60,7 +61,7 @@ var subElem = document.getElementById(subName);
 // Close other sub menu
 var othSub = document.getElementsByClassName("submenu");
 for (i = 0; i < othSub.length; i++) {
-	othSub[i].style.height = "0px";
+	outSub(othSub[i])
 }
 if (subElem){
 	subElem.style.height = "auto";
@@ -75,7 +76,9 @@ if (subElem){
 		divElem.setAttribute('class', 'submenu');		
 		divElem.setAttribute('onmouseleave', 'outSub(this)');
 		for (i = 0; i < subOptions.length; i++) {
-			divElem.appendChild(addMenuOpt(subOptions[i]));
+			opt = addMenuOpt(subOptions[i]);
+			ht =+ 1;
+			divElem.appendChild(opt);
 		}
 		docBody.appendChild(divElem);
 		subElem = divElem;
@@ -84,6 +87,7 @@ if (subElem){
 if (subElem){
 	subElem.style.top = parent.offsetHeight + "px" ;
 	subElem.style.left = parent.offsetLeft + "px" ;
+	subElem.style.opacity = 1;
 	}
 }
 
@@ -101,7 +105,7 @@ return ancElem;
 }
 
 function outSub(oSub){
-oSub.style.height = "0px";
+oSub.style.opacity = 0;
 }
 
 
