@@ -21,18 +21,32 @@
 <link href="misc/favicon.ico" rel="shortcut icon" />
 
 <script type="text/javascript" src="misc/util.js"></script>
+<script type="text/javascript" src="misc/menu.js"></script>
+<script src="misc/quill.min.js"></script>
+
 <script type="text/javascript"> 
 <!--
 
-function initNewsPage(){
-initPage();
-getInfo("listNews?data=1", listResult);
+var container ;
+var contenu = "[{\"_id\": {\"$oid\": \"5ad525e13088b500402b9292\"}, \"title\": \"Mets pr\\u00e9par\\u00e9s - Semaine du 23 avril\", \"active\": 1, \"date\": \"12 avril 2018\", \"dateM\": 1524015605, \"contentL\": \"<p><img src=\\\"https://loupop.ddns.net//photos/23avril.jpg\\\">undefined</p>\", \"contentR\": \"<p>Ts\\u00e9 dans une semaine, on a les repas de semaine et le \\\"repas du samedi\\\". Le repas du samedi prend habituellement plus de temps \\u00e0 pr\\u00e9parer, est un peu plus \\\"fancy\\\" et on sort la belle nappe pis toute...!</p>\"}, {\"_id\": {\"$oid\": \"5ad5294c3088b5004c810e5c\"}, \"title\": \"tttt\", \"active\": 0, \"date\": \"new news\", \"dateC\": 1523919180, \"dateM\": 1524015643, \"contentL\": \"<p><br></p>\", \"contentR\": \"<p>new news</p>\"}, {\"_id\": {\"$oid\": \"5ad5467b3088b5005488e941\"}, \"title\": \"new new\", \"active\": 1, \"date\": \"16 av\", \"dateC\": 1523926651, \"dateM\": 1523934816, \"contentL\": \"<p><img src=\\\"https://loupop.ddns.net//photos/aa_prof.jpg\\\"></p>\", \"contentR\": \"<p>test <img src=\\\"https://loupop.ddns.net//photos/1Chef.jpg\\\">new news</p>\"}, {\"_id\": {\"$oid\": \"5ad5771fb16eb90009fc071b\"}, \"title\": \"Repas pr\\u00e9par\\u00e9s - Semaine du 16 avril\", \"active\": 1, \"date\": \"5 avril 2018\", \"dateC\": 1523939103, \"dateM\": 1523963484, \"contentL\": \"<p><a href=\\\"https://www.traiteursimpas.com/nouvelles\\\" target=\\\"_blank\\\"><img src=\\\"https://loupop.ddns.net//photos/16avril.jpg\\\" width=\\\"286\\\" height=\\\"198\\\"></a></p>\", \"contentR\": \"<p>Notre chef vous surprendra certainement pour la semaine du 16 avril avec plusieurs nouveaut\\u00e9s au menu.</p><p><br></p><p>Concoctez votre menu hebdomadaire en choisissant vos plats parmi les 7 repas propos\\u00e9s et profitez de nos rabais pour les commandes de 40.00$ et plus!</p><p><br></p><p>Date limite pour commander : mercredi 11 avril (inclusivement)</p><p>Livraison (Qu\\u00e9bec et L\\u00e9vis) : dimanche 15 avril</p>\"}]"
+var delta = "{\"ops\":[{\"attributes\":{\"background\":\"rgba(0, 0, 0, 0)\"},\"insert\":\"La fête des mères a lieu dans un mois et vous pouvez courir la chance de gagner un certificat-cadeau Simpas d'une valeur de 50.00$ à offrir en cadeau. \"},{\"insert\":\"\\n\"},{\"attributes\":{\"background\":\"rgba(0, 0, 0, 0)\"},\"insert\":\"Rendez-vous sur notre page facebook pour participer !\"},{\"insert\":\"\\n\\n\"},{\"attributes\":{\"background\":\"#ff0000\",\"size\":\"large\",\"link\":\"https://www.traiteursimpas.com/nouvelles\"},\"insert\":\" Commander \"},{\"attributes\":{\"indent\":2},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]}";
 
+function initNewsPage(){
+container = document.getElementById('editor');
+quill = new Quill(container);
+initPage();
+//getInfo("listNews?data=1", listResult);
+listResult(JSON.parse(contenu));
+initMenu("oMenu0");
 }
 
 function listResult(data){
 var newsColl = document.getElementById('newsColl');
 //var htmlStr = "";
+
+var det = JSON.parse(delta);
+delta = quill.setContents(det);
+//testDiv.innerHTML=quill.root.innerHTML;
 
 var ulElem = document.createElement("ul");
 
@@ -52,8 +66,17 @@ for (var i = 0; i < data.length ; i ++) {
 	var divElem = document.createElement('div');
 	divElem.setAttribute('class', 'itemDesc');
 	var pElem = document.createElement('span');
-	pElem.innerHTML=plat.title;
+	pElem.innerHTML = plat.title;
 	divElem.appendChild(pElem);
+
+	var pElem = document.createElement('p');
+	pElem.innerHTML = plat.date;
+	divElem.appendChild(pElem);
+	
+	var pElem = document.createElement('p');
+	pElem.innerHTML = quill.root.innerHTML;
+	divElem.appendChild(pElem);
+	
 /*	var pElem = document.createElement('p');
 	pElem.innerHTML='<a title="Haut de page" href="#hautPage"><img src="misc/haut.png" alt="Haut de page"/></a>';
 	pElem.setAttribute('class', 'boutHaut');
@@ -68,8 +91,82 @@ newsColl.appendChild(ulElem);
 
 // -->
 </script> 
-
 <style>
+
+#divmenu{
+visibility: hidden;
+}
+
+#topmenu {
+	/*background: white;*/
+    top: 0px;
+    left: 0px;
+    width: 980px;
+    height: 25px;
+    position: absolute;
+    min-width: 980px;
+    margin-left: 0px;
+}
+
+#topmenu ul {
+ padding:0;
+ margin:0;
+ list-style-type:none;
+ }
+ 
+#topmenu li {
+ margin-left:2px;
+ border-left: 1px solid rgba(255, 255, 255, 1);
+ float:left; /*pour IE*/
+ padding: 5px;
+ }
+ 
+#topmenu ul li a{
+ display:block;
+ float:left;   
+ min-width:100px;
+ font-size: 1.2em;
+ color: white;
+text-align:center;
+text-decoration:none;
+font-weight:bold;
+ }
+ 
+#topmenu ul li a:hover {
+color: #AD1822;
+transition: color 0.4s ease 0s;
+ } 
+ 
+.selectedOpt{
+ color: #AD1822 !important;
+ }
+ 
+.submenu {
+    position: absolute;
+    background: #eee;
+    overflow: hidden;
+	transition:  opacity 0.9s, ease-in-out;
+    z-index: 1000;
+	top:50px;
+	opacity: 0;
+}
+
+.inputButton {
+    display: block;
+	min-width:100px;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    padding: 5px;
+	border:1px inset #666;
+}
+
+.inputButton:hover{
+background: #999 ;
+cursor: pointer;
+}
+
+/*FIN MENU*/
 
 .zoneLeft{
 float: left;
@@ -83,11 +180,37 @@ img {
     object-fit: contain;
 }
 
+#editor{
+display: none;
+}
+
+.itemDesc {
+    display: table-cell;
+}
+
 </style>
 </head>
 
 <body onload="initNewsPage();">
-
+<div id="topmenu">
+<ul>
+	<li>
+	<a id="oMenu0" class="optMenu" href="index.html" onmouseover="showSubMenu(this)" >Accueil</a>
+	</li>
+	<li>
+	<a id="oMenu1" class="optMenu" href="news.html" onmouseover="showSubMenu(this)" >Nouvelles</a>
+	</li>
+	<li>
+	<a id="oMenu2" class="optMenu" href="repas.html" onmouseover="showSubMenu(this)" >Repas pr&eacute;par&eacute;s</a>   
+	</li>
+	<li>
+	<a id="oMenu3" class="optMenu" href="joindre.html" onmouseover="showSubMenu(this)" >Traiteur</a>
+	</li>
+	<li>
+	<a id="oMenu4" class="optMenu" href="joindre.html" onmouseover="showSubMenu(this)">Certificat-cadeau</a>
+	</li>
+</ul>
+</div>
 <div id="entete">
 <a name="hautPage"></a>
 <div id="fontAdjust">
@@ -95,29 +218,6 @@ img {
 <div class="divFont" onclick="setFontS(-0.2, this)"><div class="divFontSize fontSmall">A</div><div class="fontLogo">&#8595;</div></div>
 </div>
 <h1>Traiteur Simpas</h1>
-</div>
-
-<div id="divmenu">
-<ul>
-	<li>
-	<a href="index.html">Accueil</a>
-	</li>
-	<li>
-	<a href="repas.html">Repas pr&eacute;par&eacute;s</a> 
-	</li>
-	<li>
-	<a href="joindre.html">Traiteur</a>
-	</li>
-	<li>
-	<a href="joindre.html">Certificat-cadeau</a>
-	</li>
-	<li>
-	<a href="a_propos.html">&Agrave; propos</a>
-	</li>
-	<li>
-	<a href="joindre.html">Nous joindre</a>
-	</li>
-</ul>
 </div>
 
 
@@ -130,10 +230,12 @@ img {
 <div id="newsColl" class="listItem-gallery ql-container ql-snow">
 
 </div>
-
+<div id="editor"></div> 
 </div>
 
 </div>  <!--End content // -->
+
+
 
 <div id="piedPage">
 
